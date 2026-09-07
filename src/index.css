@@ -1,0 +1,425 @@
+:root {
+  --sc-ink: #e8eef5;
+  --sc-muted: #8b9bb0;
+  --sc-deep: #0b1220;
+  --sc-panel: #151e2e;
+  --sc-line: #243247;
+  --sc-cyan: #2ee6d6;
+  --sc-cyan-dim: rgba(46, 230, 214, 0.14);
+  --sc-display: 'Syne', system-ui, sans-serif;
+  --sc-body: 'Public Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--sc-body);
+  background: var(--sc-deep);
+  color: var(--sc-ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.sc-grid-bg {
+  background-color: var(--sc-deep);
+  background-image:
+    linear-gradient(180deg, rgba(46, 230, 214, 0.06), transparent 42%),
+    linear-gradient(rgba(36, 50, 71, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36, 50, 71, 0.55) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+  background-position: center top, center top, center top;
+}
+
+.sc-admin-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--sc-cyan);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sc-panel) 88%, transparent);
+  color: var(--sc-cyan);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.sc-admin-fab:hover {
+  transform: translateY(-2px);
+  background: var(--sc-cyan);
+  color: var(--sc-deep);
+}
+
+.sc-admin-fab:focus-visible {
+  outline: 2px solid var(--sc-cyan);
+  outline-offset: 3px;
+}
+
+.sc-admin-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sc-admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--sc-line);
+  background: var(--sc-panel);
+}
+
+.sc-admin-toolbar__brand {
+  font-family: var(--sc-display);
+  font-weight: 700;
+  margin-right: auto;
+  letter-spacing: 0.01em;
+}
+
+.sc-admin-btn {
+  appearance: none;
+  border: 1px solid var(--sc-line);
+  background: transparent;
+  color: var(--sc-ink);
+  border-radius: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 560;
+}
+
+.sc-admin-btn:hover {
+  border-color: var(--sc-cyan);
+  color: var(--sc-cyan);
+}
+
+.sc-admin-btn--primary {
+  background: var(--sc-cyan);
+  border-color: var(--sc-cyan);
+  color: var(--sc-deep);
+}
+
+.sc-admin-btn--primary:hover {
+  filter: brightness(1.05);
+  color: var(--sc-deep);
+}
+
+.sc-admin-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--sc-panel);
+  border: 1px solid var(--sc-cyan);
+  color: var(--sc-ink);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.sc-admin-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+/* —— Block styles —— */
+
+.sc-hero {
+  position: relative;
+  min-height: min(88vh, 820px);
+  display: grid;
+  align-items: end;
+  padding: clamp(3rem, 8vw, 6.5rem) clamp(1.25rem, 5vw, 4rem);
+  overflow: hidden;
+}
+
+.sc-hero__media {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 20%, rgba(46, 230, 214, 0.22), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 12% 80%, rgba(70, 120, 255, 0.18), transparent 55%),
+    linear-gradient(160deg, #0b1220 0%, #121c2f 55%, #0a101a 100%);
+  z-index: 0;
+}
+
+.sc-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.sc-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 42rem;
+}
+
+.sc-brand {
+  font-family: var(--sc-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
+  color: var(--sc-cyan);
+}
+
+.sc-hero h1 {
+  font-family: var(--sc-display);
+  font-weight: 750;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin: 0 0 1rem;
+}
+
+.sc-hero p {
+  margin: 0 0 1.75rem;
+  color: var(--sc-muted);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  max-width: 34rem;
+}
+
+.sc-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.4rem;
+  text-decoration: none;
+  font-weight: 650;
+  border: 1px solid transparent;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.sc-btn:hover {
+  transform: translateY(-1px);
+}
+
+.sc-btn--primary {
+  background: var(--sc-cyan);
+  color: var(--sc-deep);
+}
+
+.sc-btn--ghost {
+  border-color: var(--sc-line);
+  background: transparent;
+  color: var(--sc-ink);
+}
+
+.sc-btn--ghost:hover {
+  border-color: var(--sc-cyan);
+  color: var(--sc-cyan);
+}
+
+.sc-section {
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 5vw, 4rem);
+}
+
+.sc-section__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.sc-section--narrow .sc-section__inner {
+  max-width: 720px;
+}
+
+.sc-heading {
+  font-family: var(--sc-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.sc-heading--h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+.sc-heading--h2 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); }
+.sc-heading--h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+
+.sc-text {
+  margin: 0;
+  color: var(--sc-muted);
+  font-size: 1.05rem;
+}
+
+.sc-columns {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.sc-columns--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sc-columns--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media (max-width: 800px) {
+  .sc-columns--2,
+  .sc-columns--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sc-image {
+  border-radius: 0.35rem;
+  overflow: hidden;
+  border: 1px solid var(--sc-line);
+}
+
+.sc-image img {
+  width: 100%;
+  height: auto;
+}
+
+.sc-services {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.sc-service {
+  padding: 1.25rem;
+  border: 1px solid var(--sc-line);
+  background: color-mix(in srgb, var(--sc-panel) 70%, transparent);
+  border-radius: 0.4rem;
+}
+
+.sc-service__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 0.85rem;
+  border-radius: 0.35rem;
+  background: var(--sc-cyan-dim);
+  color: var(--sc-cyan);
+  font-family: var(--sc-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.sc-service h3 {
+  font-family: var(--sc-display);
+  font-size: 1.15rem;
+  margin: 0 0 0.45rem;
+}
+
+.sc-service p {
+  margin: 0;
+  color: var(--sc-muted);
+  font-size: 0.95rem;
+}
+
+.sc-spacer {
+  width: 100%;
+}
+
+.sc-divider {
+  border: 0;
+  border-top: 1px solid var(--sc-line);
+  margin: 0;
+}
+
+.sc-footer {
+  padding: 2.5rem clamp(1.25rem, 5vw, 4rem);
+  border-top: 1px solid var(--sc-line);
+  background: #080e18;
+}
+
+.sc-footer__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sc-footer__brand {
+  font-family: var(--sc-display);
+  font-weight: 700;
+  color: var(--sc-cyan);
+  margin: 0 0 0.35rem;
+}
+
+.sc-footer__meta {
+  margin: 0;
+  color: var(--sc-muted);
+  font-size: 0.95rem;
+}
+
+.sc-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sc-footer__links a {
+  color: var(--sc-muted);
+  text-decoration: none;
+}
+
+.sc-footer__links a:hover {
+  color: var(--sc-cyan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-admin-fab,
+  .sc-btn {
+    transition: none;
+  }
+
+  .sc-admin-fab:hover,
+  .sc-btn:hover {
+    transform: none;
+  }
+}
