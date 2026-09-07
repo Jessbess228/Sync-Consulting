@@ -15,6 +15,7 @@ export type SyncComponents = {
     background: 'deep' | 'panel' | 'grid'
     width: 'default' | 'narrow'
     padding: 'sm' | 'md' | 'lg'
+    anchorId: string
     content: Slot
   }
   Columns: {
@@ -148,15 +149,17 @@ export const puckConfig: Config<SyncComponents> = {
             { label: 'Large', value: 'lg' },
           ],
         },
+        anchorId: { type: 'text', label: 'Anchor id (optional)' },
         content: { type: 'slot' },
       },
       defaultProps: {
         background: 'deep',
         width: 'default',
         padding: 'md',
+        anchorId: '',
         content: [],
       },
-      render: ({ background, width, padding, content: Content }) => {
+      render: ({ background, width, padding, anchorId, content: Content }) => {
         const pad =
           padding === 'sm'
             ? 'clamp(1.5rem, 4vw, 2.5rem)'
@@ -171,6 +174,7 @@ export const puckConfig: Config<SyncComponents> = {
               : 'var(--sc-deep)'
         return (
           <section
+            id={anchorId || undefined}
             className={`sc-section${width === 'narrow' ? ' sc-section--narrow' : ''}${
               background === 'grid' ? ' sc-grid-bg' : ''
             }`}
@@ -366,7 +370,7 @@ export const puckConfig: Config<SyncComponents> = {
         ],
       },
       render: ({ items }) => (
-        <div className="sc-services" id="services">
+        <div className="sc-services">
           {items.map((item, index) => (
             <article className="sc-service" key={`${item.title}-${index}`}>
               <div className="sc-service__icon">{item.icon || 'SC'}</div>
@@ -482,6 +486,7 @@ export const defaultData: Data = {
         background: 'grid',
         width: 'default',
         padding: 'lg',
+        anchorId: 'services',
         content: [
           {
             type: 'Heading',
@@ -544,6 +549,7 @@ export const defaultData: Data = {
         background: 'panel',
         width: 'default',
         padding: 'lg',
+        anchorId: 'approach',
         content: [
           {
             type: 'Columns',
@@ -603,6 +609,7 @@ export const defaultData: Data = {
         background: 'deep',
         width: 'narrow',
         padding: 'md',
+        anchorId: 'contact',
         content: [
           {
             type: 'Heading',

@@ -43,6 +43,16 @@ npm run build
 
 Serve `dist/` under the path `/sync-app/` on the same origin as the portfolio (e.g. Caddy `handle_path /sync-app/*`). That matches the Puppies `/api` proxy pattern: same-origin access from `/sync-consulting`.
 
+## Git remote
+
+Local `main` has an initial commit. Creating a Cursor-hosted remote needs an Origin namespace on the account (`origin repo create` currently errors: *Your account has no Origin namespace yet*). After a namespace is available at [cursor.com/codebase](https://cursor.com/codebase):
+
+```bash
+~/.local/bin/origin repo create <namespace>/sync-consulting
+git remote add origin <clone-url>
+git push -u origin main
+```
+
 ## Scripts
 
 | Script | Purpose |
