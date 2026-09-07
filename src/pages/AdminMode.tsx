@@ -11,7 +11,7 @@ import {
 } from '../lib/layoutStorage'
 import { puckConfig } from '../puck/config'
 
-export function AdminPage() {
+export function AdminMode() {
   const navigate = useNavigate()
   const [data, setData] = useState<Data>(() => loadLayout())
   const [editorKey, setEditorKey] = useState(0)
