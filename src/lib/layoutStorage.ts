@@ -1,29 +1,60 @@
 import type { Data } from '@puckeditor/core'
 import { defaultData } from '../puck/defaultData'
 
-export const STORAGE_KEY = 'sync-consulting-layout'
+const CMS_API = '/cms-api'
 
-export function loadLayout(): Data {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return structuredClone(defaultData)
-    const parsed = JSON.parse(raw) as Data
-    if (!parsed || !Array.isArray(parsed.content)) {
-      return structuredClone(defaultData)
-    }
-    return parsed
-  } catch {
-    return structuredClone(defaultData)
-  }
+export function isValidLayout(data: unknown): data is Data {
+  return Boolean(data && typeof data === 'object' && Array.isArray((data as Data).content))
 }
 
-export function saveLayout(data: Data): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-}
-
-export function resetLayout(): Data {
-  localStorage.removeItem(STORAGE_KEY)
+export function getDefaultLayout(): Data {
   return structuredClone(defaultData)
+}
+
+async function readLayoutResponse(response: Response): Promise<Data> {
+  if (!response.ok) {
+    throw new Error(`Layout request failed (${response.status})`)
+  }
+
+  const data: unknown = await response.json()
+  if (!isValidLayout(data)) {
+    throw new Error('Invalid layout')
+  }
+
+  return data
+}
+
+async function requestLayout(url: string, init?: RequestInit): Promise<Data> {
+  return readLayoutResponse(await fetch(url, init))
+}
+
+export async function fetchDraftLayout(): Promise<Data> {
+  const response = await fetch(`${CMS_API}/layout?status=draft`)
+  if (response.status === 404) {
+    return getDefaultLayout()
+  }
+
+  return readLayoutResponse(response)
+}
+
+export async function fetchPublishedLayout(): Promise<Data> {
+  return requestLayout(`${import.meta.env.BASE_URL}layout.json`)
+}
+
+export async function saveDraft(data: Data): Promise<Data> {
+  return requestLayout(`${CMS_API}/layout`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+}
+
+export async function publishLayout(): Promise<Data> {
+  return requestLayout(`${CMS_API}/publish`, { method: 'POST' })
+}
+
+export async function resetDraft(): Promise<Data> {
+  return saveDraft(getDefaultLayout())
 }
 
 export function exportLayout(data: Data): void {
@@ -39,21 +70,11 @@ export function exportLayout(data: Data): void {
 }
 
 export function importLayout(file: File): Promise<Data> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(String(reader.result)) as Data
-        if (!parsed || !Array.isArray(parsed.content)) {
-          reject(new Error('Invalid layout file'))
-          return
-        }
-        resolve(parsed)
-      } catch (error) {
-        reject(error)
-      }
+  return file.text().then((raw) => {
+    const parsed: unknown = JSON.parse(raw)
+    if (!isValidLayout(parsed)) {
+      throw new Error('Invalid layout file')
     }
-    reader.onerror = () => reject(reader.error ?? new Error('Read failed'))
-    reader.readAsText(file)
+    return parsed
   })
 }

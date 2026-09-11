@@ -1,136 +1,165 @@
-import { Puck, type Data } from '@puckeditor/core'
 import '@puckeditor/core/puck.css'
-import { useCallback, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Puck, type Data } from '@puckeditor/core'
+import { useEffect, useState } from 'react'
 import {
   exportLayout,
+  fetchDraftLayout,
+  getDefaultLayout,
   importLayout,
-  loadLayout,
-  resetLayout,
-  saveLayout,
+  publishLayout,
+  resetDraft,
+  saveDraft,
 } from '../lib/layoutStorage'
 import { puckConfig } from '../puck/config'
+import { messages } from './Home.messages'
+
+type CmsStatus = 'loading' | 'offline' | 'saving' | 'saved' | 'published' | 'error'
+
+const statusLabel: Record<CmsStatus, string> = {
+  loading: 'Loading draft…',
+  offline: 'CMS offline — export JSON to keep work',
+  saving: 'Saving draft…',
+  saved: 'Draft saved',
+  published: 'Published',
+  error: 'Layout error',
+}
 
 export function AdminMode() {
-  const navigate = useNavigate()
-  const [data, setData] = useState<Data>(() => loadLayout())
-  const [editorKey, setEditorKey] = useState(0)
-  const [toast, setToast] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const latestData = useRef(data)
+  const [data, setData] = useState<Data | null>(null)
+  const [status, setStatus] = useState<CmsStatus>('loading')
 
-  const showToast = useCallback((message: string) => {
-    setToast(message)
-    window.setTimeout(() => setToast(null), 2200)
-  }, [])
+  useEffect(() => {
+    let cancelled = false
 
-  const handleSave = useCallback(
-    (next: Data) => {
-      saveLayout(next)
-      latestData.current = next
-      setData(next)
-      showToast('Saved')
-    },
-    [showToast],
-  )
+    fetchDraftLayout()
+      .then((draft) => {
+        if (cancelled) return
+        setData(draft)
+        setStatus('saved')
+      })
+      .catch(() => {
+        if (cancelled) return
+        setData(getDefaultLayout())
+        setStatus('offline')
+      })
 
-  const handleReset = useCallback(() => {
-    if (!window.confirm('Reset the page to the default Sync Consulting layout?')) {
-      return
+    return () => {
+      cancelled = true
     }
-    const next = resetLayout()
-    latestData.current = next
-    setData(next)
-    setEditorKey((key) => key + 1)
-    showToast('Reset to default')
-  }, [showToast])
-
-  const handleExport = useCallback(() => {
-    exportLayout(latestData.current)
   }, [])
 
-  const handleImportClick = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
+  useEffect(() => {
+    if (!data) return
 
-  const handleImportFile = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
+    const timeout = window.setTimeout(() => {
+      setStatus('saving')
+      saveDraft(data)
+        .then(() => setStatus('saved'))
+        .catch(() => setStatus('offline'))
+    }, 400)
+
+    return () => window.clearTimeout(timeout)
+  }, [data])
+
+  const handleSave = async () => {
+    if (!data) return
+    try {
+      setStatus('saving')
+      await saveDraft(data)
+      setStatus('saved')
+    } catch {
+      setStatus('offline')
+    }
+  }
+
+  const handlePublish = async (nextData: Data | null = data) => {
+    if (!nextData) return
+    try {
+      setStatus('saving')
+      setData(nextData)
+      await saveDraft(nextData)
+      await publishLayout()
+      setStatus('published')
+    } catch {
+      setStatus('offline')
+    }
+  }
+
+  const handleReset = async () => {
+    try {
+      const fresh = await resetDraft()
+      setData(fresh)
+      setStatus('saved')
+    } catch {
+      setData(getDefaultLayout())
+      setStatus('offline')
+    }
+  }
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const imported = await importLayout(file)
+      setData(imported)
+      setStatus('saving')
+      await saveDraft(imported)
+      setStatus('saved')
+    } catch (error) {
+      console.error('Unable to import layout', error)
+      setStatus('error')
+    } finally {
       event.target.value = ''
-      if (!file) return
-      try {
-        const next = await importLayout(file)
-        saveLayout(next)
-        latestData.current = next
-        setData(next)
-        setEditorKey((key) => key + 1)
-        showToast('Imported layout')
-      } catch {
-        showToast('Import failed')
-      }
-    },
-    [showToast],
-  )
+    }
+  }
+
+  if (!data) {
+    return <div className="admin-mode-shell">{messages.loading}</div>
+  }
 
   return (
-    <div className="sc-admin-shell">
-      <div className="sc-admin-toolbar">
-        <div className="sc-admin-toolbar__brand">Sync Consulting · Layout</div>
-        <Link className="sc-admin-btn" to="/">
-          View site
-        </Link>
-        <button type="button" className="sc-admin-btn" onClick={handleExport}>
-          Export JSON
-        </button>
-        <button type="button" className="sc-admin-btn" onClick={handleImportClick}>
-          Import JSON
-        </button>
-        <button type="button" className="sc-admin-btn" onClick={handleReset}>
-          Reset to default
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          hidden
-          onChange={handleImportFile}
-        />
-      </div>
-
-      <div className="sc-admin-editor">
-        <Puck
-          key={editorKey}
-          config={puckConfig}
-          data={data}
-          onChange={(next) => {
-            latestData.current = next
-          }}
-          onPublish={handleSave}
-          overrides={{
-            headerActions: ({ children }) => (
-              <>
-                <button
-                  type="button"
-                  className="sc-admin-btn sc-admin-btn--primary"
-                  onClick={() => handleSave(latestData.current)}
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="sc-admin-btn"
-                  onClick={() => navigate('/')}
-                >
-                  Preview
-                </button>
-                {children}
-              </>
-            ),
-          }}
-        />
-      </div>
-
-      {toast ? <div className="sc-admin-toast">{toast}</div> : null}
+    <div className="admin-mode-shell">
+      <Puck
+        config={puckConfig}
+        data={data}
+        onChange={setData}
+        onPublish={(nextData) => {
+          void handlePublish(nextData)
+        }}
+        renderHeaderActions={() => (
+          <div className="puck-header-actions">
+            <span className={`puck-header-status puck-header-status--${status}`}>{statusLabel[status]}</span>
+            <button type="button" className="puck-header-button" onClick={() => void handleSave()}>
+              Save draft
+            </button>
+            <button type="button" className="puck-header-button" onClick={() => void handlePublish()}>
+              Publish
+            </button>
+            <button
+              type="button"
+              className="puck-header-button puck-header-button--secondary"
+              onClick={() => exportLayout(data)}
+            >
+              Export JSON
+            </button>
+            <button
+              type="button"
+              className="puck-header-button puck-header-button--secondary"
+              onClick={() => void handleReset()}
+            >
+              Reset
+            </button>
+            <label className="puck-header-button puck-header-button--secondary puck-import-button">
+              Import JSON
+              <input type="file" accept="application/json" hidden onChange={(event) => void handleImport(event)} />
+            </label>
+            <a href="#/" className="puck-header-link">
+              View site
+            </a>
+          </div>
+        )}
+      />
     </div>
   )
 }

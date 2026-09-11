@@ -1,24 +1,27 @@
 # Sync Consulting
 
-Standalone marketing site for **Sync Consulting** with a full visual page builder (Puck). Edit layout, copy, and look from Admin; the public page renders the same component catalog from saved JSON.
+Standalone marketing site for **Sync Consulting** with a visual page builder (Puck). Layout is one JSON document: edit in Admin, publish to `public/layout.json`, and the public page renders the same component catalog.
 
 ## Stack
 
 - Vite + React 19 + TypeScript
 - React Router
 - [@puckeditor/core](https://puckeditor.com/) visual editor
+- Koa CMS API (draft vs published JSON)
 
 ## Develop
 
 ```bash
 npm install
-npm run dev
+npm start
 ```
 
-App runs at [http://127.0.0.1:5174/sync-app/](http://127.0.0.1:5174/sync-app/) (`base: /sync-app/` so it can mount under the portfolio origin).
+`npm start` runs the CMS API on port `9000` and Vite on `5174`. App: [http://127.0.0.1:5174/sync-app/](http://127.0.0.1:5174/sync-app/) (`base: /sync-app/` so it can mount under the portfolio origin).
 
 - Public site: `/sync-app/`
-- Layout manager: `/sync-app/admin` (or the floating **Admin** button)
+- Layout manager: `/sync-app/#/admin`
+
+Use `npm run dev` alone only if you do not need to save drafts. The public page still loads published `layout.json` without the CMS server.
 
 ### Portfolio (Website) embed
 
@@ -30,8 +33,14 @@ In the sibling [Website](../Website) portfolio:
 
 ## Persist layout
 
-- Saves to `localStorage` key `sync-consulting-layout`
-- Admin toolbar: **Save**, **View site**, **Reset to default**, **Export JSON**, **Import JSON**
+The page is stored as Puck `Data` JSON (the document you would later put in a database):
+
+- Draft autosave: `gen/draft.json` via `PUT /cms-api/layout`
+- Publish: copies draft to `public/layout.json` (included in `vite build`)
+- Public site reads `/sync-app/layout.json`
+- Admin toolbar: **Save draft**, **Publish**, **View site**, **Reset**, **Export JSON**, **Import JSON**
+
+If the CMS server is down, Admin still edits in memory; export JSON to keep work.
 
 ## Production
 
@@ -57,7 +66,9 @@ git push -u origin main
 
 | Script | Purpose |
 | --- | --- |
-| `npm run dev` | Dev server on port 5174 |
+| `npm start` | CMS API (9000) + Vite (5174) |
+| `npm run cms` | Koa layout API on port 9000 |
+| `npm run dev` | Vite only, port 5174 |
 | `npm run build` | Typecheck + production build |
 | `npm run preview` | Preview production build on 5174 |
 | `npm run lint` | Oxlint |

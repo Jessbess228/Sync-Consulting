@@ -1,15 +1,30 @@
-import type { Config, Data, Slot } from '@puckeditor/core'
+import type { Config, Slot } from '@puckeditor/core'
+import { messages } from '../pages/Home.messages'
 
 export type SyncComponents = {
+  Colourpicker: {
+    label: string
+    value: string
+  }
+  Header: {
+    line1: string
+    line2: string
+    line3: string
+    links: Array<{ label: string; href: string }>
+  }
   Hero: {
     brand: string
     headline: string
+    headlineAlign: 'left' | 'right'
     subcopy: string
     primaryCtaLabel: string
     primaryCtaHref: string
     secondaryCtaLabel: string
     secondaryCtaHref: string
     imageUrl: string
+  }
+  Filmstrip: {
+    images: Array<{ src: string; alt: string }>
   }
   Section: {
     background: 'deep' | 'panel' | 'grid'
@@ -60,13 +75,117 @@ export type SyncComponents = {
   }
 }
 
-export const puckConfig: Config<SyncComponents> = {
+type RootProps = {
+  title: string
+}
+
+export const puckConfig: Config<SyncComponents, RootProps> = {
+  categories: {
+    layout: {
+      title: 'Layout',
+      components: ['Section', 'Columns', 'Spacer', 'Divider'],
+    },
+    content: {
+      title: 'Content',
+      components: ['Header', 'Hero', 'Filmstrip', 'Heading', 'Text', 'Image', 'Button', 'Services', 'Footer', 'Colourpicker'],
+    },
+  },
   components: {
+    Colourpicker: {
+      label: 'Colourpicker',
+      fields: {
+        label: { type: 'text', label: 'Label' },
+        value: {
+          type: 'custom',
+          label: 'Colour',
+          render: ({ value, onChange }) => (
+            <input
+              type="color"
+              value={value || '#1f2937'}
+              onChange={(event) => onChange(event.currentTarget.value)}
+              aria-label="Colour"
+            />
+          ),
+        },
+      },
+      defaultProps: {
+        label: messages.defaults.colourLabel,
+        value: '#1f2937',
+      },
+      render: ({ label, value }) => (
+        <div className="sc-colourpicker">
+          <span
+            className="sc-colourpicker__swatch"
+            style={{ background: value || '#1f2937' }}
+            aria-hidden="true"
+          />
+          <span>{label}</span>
+          <code>{value || '#1f2937'}</code>
+        </div>
+      ),
+    },
+
+    Header: {
+      label: 'Header',
+      fields: {
+        line1: { type: 'text', label: 'Wordmark line 1' },
+        line2: { type: 'text', label: 'Wordmark line 2' },
+        line3: { type: 'text', label: 'Wordmark line 3' },
+        links: {
+          type: 'array',
+          label: 'Navigation',
+          getItemSummary: (item) => item.label || 'Link',
+          arrayFields: {
+            label: { type: 'text', label: 'Label' },
+            href: { type: 'text', label: 'Href' },
+          },
+          defaultItemProps: {
+            label: messages.defaults.navLink,
+            href: '#',
+          },
+        },
+      },
+      defaultProps: {
+        line1: messages.header.line1,
+        line2: messages.header.line2,
+        line3: messages.header.line3,
+        links: messages.header.links.map((link) => ({ ...link })),
+      },
+      render: ({ line1, line2, line3, links }) => {
+        const lines = [line1, line2, line3].filter((line) => line.trim())
+        return (
+          <header className="sc-header">
+            <a className="sc-wordmark" href="#/">
+              {lines.map((line, index) => (
+                <span key={`${line}-${index}`}>{line}</span>
+              ))}
+              <i className="sc-wordmark__rule" aria-hidden="true" />
+            </a>
+            <nav className="sc-nav" aria-label={messages.header.navAriaLabel}>
+              {links.map((link) => (
+                <a key={link.href + link.label} href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </header>
+        )
+      },
+    },
+
     Hero: {
       label: 'Hero',
       fields: {
-        brand: { type: 'text', label: 'Brand' },
-        headline: { type: 'text', label: 'Headline' },
+        brand: { type: 'text', label: 'Eyebrow (optional)' },
+        headline: { type: 'textarea', label: 'Headline' },
+        headlineAlign: {
+          type: 'radio',
+          label: 'Headline align',
+          options: [
+            { label: 'Left', value: 'left' },
+            { label: 'Right', value: 'right' },
+          ],
+        },
         subcopy: { type: 'textarea', label: 'Supporting copy' },
         primaryCtaLabel: { type: 'text', label: 'Primary CTA label' },
         primaryCtaHref: { type: 'text', label: 'Primary CTA href' },
@@ -75,19 +194,20 @@ export const puckConfig: Config<SyncComponents> = {
         imageUrl: { type: 'text', label: 'Background image URL (optional)' },
       },
       defaultProps: {
-        brand: 'Sync Consulting',
-        headline: 'Get your teams in sync.',
-        subcopy:
-          'We align ops, product, and engineering so delivery stops thrashing and starts compounding.',
-        primaryCtaLabel: 'Book a call',
-        primaryCtaHref: '#contact',
-        secondaryCtaLabel: 'See services',
-        secondaryCtaHref: '#services',
+        brand: messages.hero.brand,
+        headline: messages.hero.headline,
+        headlineAlign: 'right',
+        subcopy: messages.hero.subcopy,
+        primaryCtaLabel: messages.hero.primaryCtaLabel,
+        primaryCtaHref: messages.hero.primaryCtaHref,
+        secondaryCtaLabel: messages.hero.secondaryCtaLabel,
+        secondaryCtaHref: messages.hero.secondaryCtaHref,
         imageUrl: '',
       },
       render: ({
         brand,
         headline,
+        headlineAlign,
         subcopy,
         primaryCtaLabel,
         primaryCtaHref,
@@ -95,27 +215,71 @@ export const puckConfig: Config<SyncComponents> = {
         secondaryCtaHref,
         imageUrl,
       }) => (
-        <section className="sc-hero">
-          <div className="sc-hero__media" aria-hidden="true">
-            {imageUrl ? <img src={imageUrl} alt="" /> : null}
-          </div>
-          <div className="sc-hero__content">
-            <p className="sc-brand">{brand}</p>
-            <h1>{headline}</h1>
-            <p>{subcopy}</p>
-            <div className="sc-cta-row">
-              {primaryCtaLabel ? (
-                <a className="sc-btn sc-btn--primary" href={primaryCtaHref}>
-                  {primaryCtaLabel}
-                </a>
-              ) : null}
-              {secondaryCtaLabel ? (
-                <a className="sc-btn sc-btn--ghost" href={secondaryCtaHref}>
-                  {secondaryCtaLabel}
-                </a>
-              ) : null}
+        <section className={`sc-hero sc-hero--${headlineAlign}`}>
+          {imageUrl ? (
+            <div className="sc-hero__media" aria-hidden="true">
+              <img src={imageUrl} alt="" />
             </div>
+          ) : null}
+          <div className="sc-hero__content">
+            {brand ? <p className="sc-brand">{brand}</p> : null}
+            <h1>{headline}</h1>
+            {subcopy ? <p>{subcopy}</p> : null}
+            {primaryCtaLabel || secondaryCtaLabel ? (
+              <div className="sc-cta-row">
+                {primaryCtaLabel ? (
+                  <a className="sc-btn sc-btn--primary" href={primaryCtaHref}>
+                    {primaryCtaLabel}
+                  </a>
+                ) : null}
+                {secondaryCtaLabel ? (
+                  <a className="sc-btn sc-btn--ghost" href={secondaryCtaHref}>
+                    {secondaryCtaLabel}
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
           </div>
+        </section>
+      ),
+    },
+
+    Filmstrip: {
+      label: 'Filmstrip',
+      fields: {
+        images: {
+          type: 'array',
+          label: 'Images',
+          getItemSummary: (item) => item.alt || 'Image',
+          arrayFields: {
+            src: { type: 'text', label: 'Image URL' },
+            alt: { type: 'text', label: 'Alt text' },
+          },
+          defaultItemProps: {
+            src: messages.filmstrip.images[0].src,
+            alt: messages.defaults.filmstripImageAlt,
+          },
+        },
+      },
+      defaultProps: {
+        images: messages.filmstrip.images.map((image) => ({ ...image })),
+      },
+      render: ({ images }) => (
+        <section className="sc-filmstrip" aria-label={messages.filmstrip.ariaLabel}>
+          <div className="sc-filmstrip__track">
+            {images.map((image, index) => (
+              <figure key={`${image.src}-${index}`}>
+                <img src={image.src} alt={image.alt} />
+              </figure>
+            ))}
+          </div>
+          {images.length > 1 ? (
+            <div className="sc-filmstrip__dots" aria-hidden="true">
+              {images.slice(0, 3).map((_, index) => (
+                <span key={index} className={index === 1 ? 'is-active' : undefined} />
+              ))}
+            </div>
+          ) : null}
         </section>
       ),
     },
@@ -184,7 +348,7 @@ export const puckConfig: Config<SyncComponents> = {
             }}
           >
             <div className="sc-section__inner">
-              <Content />
+              <Content minEmptyHeight={120} />
             </div>
           </section>
         )
@@ -214,6 +378,7 @@ export const puckConfig: Config<SyncComponents> = {
         <Content
           className={`sc-columns sc-columns--${columns}`}
           style={{ gap }}
+          minEmptyHeight={120}
         />
       ),
     },
@@ -241,7 +406,7 @@ export const puckConfig: Config<SyncComponents> = {
         },
       },
       defaultProps: {
-        text: 'Heading',
+        text: messages.defaults.heading,
         level: 'h2',
         align: 'left',
       },
@@ -272,7 +437,7 @@ export const puckConfig: Config<SyncComponents> = {
         },
       },
       defaultProps: {
-        text: 'Supporting paragraph goes here.',
+        text: messages.defaults.paragraph,
         align: 'left',
       },
       render: ({ text, align }) => (
@@ -289,8 +454,8 @@ export const puckConfig: Config<SyncComponents> = {
         alt: { type: 'text', label: 'Alt text' },
       },
       defaultProps: {
-        src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-        alt: 'Team collaborating',
+        src: messages.approach.imageSrc,
+        alt: messages.defaults.imageAlt,
       },
       render: ({ src, alt }) => (
         <figure className="sc-image">
@@ -314,8 +479,8 @@ export const puckConfig: Config<SyncComponents> = {
         },
       },
       defaultProps: {
-        label: 'Get started',
-        href: '#contact',
+        label: messages.defaults.buttonLabel,
+        href: messages.hero.primaryCtaHref,
         variant: 'primary',
       },
       render: ({ label, href, variant }) => (
@@ -341,33 +506,14 @@ export const puckConfig: Config<SyncComponents> = {
             icon: { type: 'text', label: 'Icon / initials' },
           },
           defaultItemProps: {
-            title: 'New service',
-            description: 'Describe the offer.',
+            title: messages.defaults.newServiceTitle,
+            description: messages.defaults.newServiceDescription,
             icon: 'SC',
           },
         },
       },
       defaultProps: {
-        items: [
-          {
-            title: 'Operating cadence',
-            description:
-              'Install a weekly rhythm that keeps priorities visible and decisions moving.',
-            icon: '01',
-          },
-          {
-            title: 'Delivery systems',
-            description:
-              'Tighten the path from idea to shipped work without adding ceremony.',
-            icon: '02',
-          },
-          {
-            title: 'Org alignment',
-            description:
-              'Translate strategy into ownership maps teams can actually run.',
-            icon: '03',
-          },
-        ],
+        items: messages.services.items.map((item) => ({ ...item })),
       },
       render: ({ items }) => (
         <div className="sc-services">
@@ -415,14 +561,14 @@ export const puckConfig: Config<SyncComponents> = {
         link3Href: { type: 'text', label: 'Link 3 href' },
       },
       defaultProps: {
-        brand: 'Sync Consulting',
-        contact: 'hello@syncconsulting.example',
-        link1Label: 'Services',
-        link1Href: '#services',
-        link2Label: 'Approach',
-        link2Href: '#approach',
-        link3Label: 'Contact',
-        link3Href: '#contact',
+        brand: messages.footer.brand,
+        contact: messages.footer.contact,
+        link1Label: messages.footer.links[0].label,
+        link1Href: messages.footer.links[0].href,
+        link2Label: messages.footer.links[1].label,
+        link2Href: messages.footer.links[1].href,
+        link3Label: messages.footer.links[2].label,
+        link3Href: messages.footer.links[2].href,
       },
       render: ({
         brand,
@@ -459,204 +605,13 @@ export const puckConfig: Config<SyncComponents> = {
       },
     },
   },
-}
-
-export const defaultData: Data = {
-  root: { props: { title: 'Sync Consulting' } },
-  content: [
-    {
-      type: 'Hero',
-      props: {
-        id: 'Hero-1',
-        brand: 'Sync Consulting',
-        headline: 'Get your teams in sync.',
-        subcopy:
-          'We align ops, product, and engineering so delivery stops thrashing and starts compounding.',
-        primaryCtaLabel: 'Book a call',
-        primaryCtaHref: '#contact',
-        secondaryCtaLabel: 'See services',
-        secondaryCtaHref: '#services',
-        imageUrl: '',
-      },
+  root: {
+    fields: {
+      title: { type: 'text', label: 'Page title' },
     },
-    {
-      type: 'Section',
-      props: {
-        id: 'Section-services',
-        background: 'grid',
-        width: 'default',
-        padding: 'lg',
-        anchorId: 'services',
-        content: [
-          {
-            type: 'Heading',
-            props: {
-              id: 'Heading-services',
-              text: 'What we sync',
-              level: 'h2',
-              align: 'left',
-            },
-          },
-          {
-            type: 'Spacer',
-            props: { id: 'Spacer-1', size: 20 },
-          },
-          {
-            type: 'Text',
-            props: {
-              id: 'Text-services-intro',
-              text: 'Practical systems for growing teams — light enough to adopt, strong enough to stick.',
-              align: 'left',
-            },
-          },
-          {
-            type: 'Spacer',
-            props: { id: 'Spacer-2', size: 28 },
-          },
-          {
-            type: 'Services',
-            props: {
-              id: 'Services-1',
-              items: [
-                {
-                  title: 'Operating cadence',
-                  description:
-                    'Install a weekly rhythm that keeps priorities visible and decisions moving.',
-                  icon: '01',
-                },
-                {
-                  title: 'Delivery systems',
-                  description:
-                    'Tighten the path from idea to shipped work without adding ceremony.',
-                  icon: '02',
-                },
-                {
-                  title: 'Org alignment',
-                  description:
-                    'Translate strategy into ownership maps teams can actually run.',
-                  icon: '03',
-                },
-              ],
-            },
-          },
-        ],
-      },
+    defaultProps: {
+      title: messages.pageTitle,
     },
-    {
-      type: 'Section',
-      props: {
-        id: 'Section-approach',
-        background: 'panel',
-        width: 'default',
-        padding: 'lg',
-        anchorId: 'approach',
-        content: [
-          {
-            type: 'Columns',
-            props: {
-              id: 'Columns-approach',
-              columns: '2',
-              gap: 40,
-              content: [
-                {
-                  type: 'Heading',
-                  props: {
-                    id: 'Heading-approach',
-                    text: 'How engagement works',
-                    level: 'h2',
-                    align: 'left',
-                  },
-                },
-                {
-                  type: 'Text',
-                  props: {
-                    id: 'Text-approach',
-                    text: 'We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.',
-                    align: 'left',
-                  },
-                },
-                {
-                  type: 'Spacer',
-                  props: { id: 'Spacer-3', size: 16 },
-                },
-                {
-                  type: 'Button',
-                  props: {
-                    id: 'Button-approach',
-                    label: 'Talk with us',
-                    href: '#contact',
-                    variant: 'primary',
-                  },
-                },
-                {
-                  type: 'Image',
-                  props: {
-                    id: 'Image-approach',
-                    src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-                    alt: 'Workshop session with sticky notes',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      type: 'Section',
-      props: {
-        id: 'Section-contact',
-        background: 'deep',
-        width: 'narrow',
-        padding: 'md',
-        anchorId: 'contact',
-        content: [
-          {
-            type: 'Heading',
-            props: {
-              id: 'Heading-contact',
-              text: 'Ready to sync?',
-              level: 'h2',
-              align: 'center',
-            },
-          },
-          {
-            type: 'Text',
-            props: {
-              id: 'Text-contact',
-              text: 'Tell us where the handoffs break. We’ll propose a focused engagement within a week.',
-              align: 'center',
-            },
-          },
-          {
-            type: 'Spacer',
-            props: { id: 'Spacer-4', size: 20 },
-          },
-          {
-            type: 'Button',
-            props: {
-              id: 'Button-contact',
-              label: 'Email Sync Consulting',
-              href: 'mailto:hello@syncconsulting.example',
-              variant: 'primary',
-            },
-          },
-        ],
-      },
-    },
-    {
-      type: 'Footer',
-      props: {
-        id: 'Footer-1',
-        brand: 'Sync Consulting',
-        contact: 'hello@syncconsulting.example',
-        link1Label: 'Services',
-        link1Href: '#services',
-        link2Label: 'Approach',
-        link2Href: '#approach',
-        link3Label: 'Contact',
-        link3Href: '#contact',
-      },
-    },
-  ],
+    render: ({ children }) => <div className="site-shell">{children}</div>,
+  },
 }

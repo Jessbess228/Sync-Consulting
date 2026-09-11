@@ -1,35 +1,21 @@
+import { Render, type Data } from '@puckeditor/core'
+import { useEffect, useState } from 'react'
+import { fetchPublishedLayout, getDefaultLayout } from '../lib/layoutStorage'
+import { puckConfig } from '../puck/config'
 import { messages } from './Home.messages'
 
 export function Home() {
-  return (
-    <main className="site-shell">
-      <header className="site-header">
-        <div className="site-brand">{messages.siteBrand}</div>
+  const [layoutData, setLayoutData] = useState<Data | null>(null)
 
-        <nav className="site-nav" aria-label="Main navigation">
-          <a href="#about">{messages.navInfo}</a>
-          <a href="#contact">{messages.navContact}</a>
-          <a href="#admin">{messages.navAdmin}</a>
-        </nav>
-      </header>
+  useEffect(() => {
+    fetchPublishedLayout()
+      .then(setLayoutData)
+      .catch(() => setLayoutData(getDefaultLayout()))
+  }, [])
 
-      <section className="hero-section" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <h1 id="hero-title">
-            {messages.heroLineOne}
-          </h1>
+  if (!layoutData) {
+    return <div className="site-shell">{messages.loading}</div>
+  }
 
-          <p>{messages.heroBody}</p>
-
-          <button type="button" className="primary-cta">
-            {messages.ctaLabel}
-          </button>
-        </div>
-
-        <div className="hero-visual" aria-label={messages.heroVisualLabel}>
-          <div className="hero-image" />
-        </div>
-      </section>
-    </main>
-  )
+  return <Render config={puckConfig} data={layoutData} />
 }

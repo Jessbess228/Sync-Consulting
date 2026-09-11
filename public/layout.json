@@ -1,0 +1,259 @@
+{
+  "root": {
+    "props": {
+      "title": "Sync Consulting"
+    }
+  },
+  "content": [
+    {
+      "type": "Header",
+      "props": {
+        "id": "Header-1",
+        "line1": "SYNC",
+        "line2": "CONSULTING",
+        "line3": "",
+        "links": [
+          { "label": "The Studio", "href": "#approach" },
+          { "label": "Services", "href": "#services" },
+          { "label": "Approach", "href": "#approach" },
+          { "label": "Contact", "href": "#contact" }
+        ]
+      }
+    },
+    {
+      "type": "Hero",
+      "props": {
+        "id": "Hero-1",
+        "brand": "",
+        "headline": "Get your teams\nin sync.",
+        "headlineAlign": "right",
+        "subcopy": "",
+        "primaryCtaLabel": "",
+        "primaryCtaHref": "#contact",
+        "secondaryCtaLabel": "",
+        "secondaryCtaHref": "#services",
+        "imageUrl": ""
+      }
+    },
+    {
+      "type": "Filmstrip",
+      "props": {
+        "id": "Filmstrip-1",
+        "images": [
+          {
+            "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
+            "alt": "Dining room with artwork"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=80",
+            "alt": "Open shelving niche"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=900&q=80",
+            "alt": "Bedroom"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80",
+            "alt": "Entry and coat wall"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80",
+            "alt": "Dining space"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=80",
+            "alt": "Library alcove"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Section",
+      "props": {
+        "id": "Section-services",
+        "background": "grid",
+        "width": "default",
+        "padding": "lg",
+        "anchorId": "services",
+        "content": [
+          {
+            "type": "Heading",
+            "props": {
+              "id": "Heading-services",
+              "text": "What we sync",
+              "level": "h2",
+              "align": "left"
+            }
+          },
+          {
+            "type": "Spacer",
+            "props": {
+              "id": "Spacer-1",
+              "size": 20
+            }
+          },
+          {
+            "type": "Text",
+            "props": {
+              "id": "Text-services-intro",
+              "text": "Practical systems for growing teams — light enough to adopt, strong enough to stick.",
+              "align": "left"
+            }
+          },
+          {
+            "type": "Spacer",
+            "props": {
+              "id": "Spacer-2",
+              "size": 28
+            }
+          },
+          {
+            "type": "Services",
+            "props": {
+              "id": "Services-1",
+              "items": [
+                {
+                  "title": "Operating cadence",
+                  "description": "Install a weekly rhythm that keeps priorities visible and decisions moving.",
+                  "icon": "01"
+                },
+                {
+                  "title": "Delivery systems",
+                  "description": "Tighten the path from idea to shipped work without adding ceremony.",
+                  "icon": "02"
+                },
+                {
+                  "title": "Org alignment",
+                  "description": "Translate strategy into ownership maps teams can actually run.",
+                  "icon": "03"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Section",
+      "props": {
+        "id": "Section-approach",
+        "background": "panel",
+        "width": "default",
+        "padding": "lg",
+        "anchorId": "approach",
+        "content": [
+          {
+            "type": "Columns",
+            "props": {
+              "id": "Columns-approach",
+              "columns": "2",
+              "gap": 40,
+              "content": [
+                {
+                  "type": "Heading",
+                  "props": {
+                    "id": "Heading-approach",
+                    "text": "How engagement works",
+                    "level": "h2",
+                    "align": "left"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "props": {
+                    "id": "Text-approach",
+                    "text": "We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.",
+                    "align": "left"
+                  }
+                },
+                {
+                  "type": "Spacer",
+                  "props": {
+                    "id": "Spacer-3",
+                    "size": 16
+                  }
+                },
+                {
+                  "type": "Button",
+                  "props": {
+                    "id": "Button-approach",
+                    "label": "Talk with us",
+                    "href": "#contact",
+                    "variant": "primary"
+                  }
+                },
+                {
+                  "type": "Image",
+                  "props": {
+                    "id": "Image-approach",
+                    "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+                    "alt": "Calm interior workspace"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Section",
+      "props": {
+        "id": "Section-contact",
+        "background": "deep",
+        "width": "narrow",
+        "padding": "md",
+        "anchorId": "contact",
+        "content": [
+          {
+            "type": "Heading",
+            "props": {
+              "id": "Heading-contact",
+              "text": "Ready to sync?",
+              "level": "h2",
+              "align": "center"
+            }
+          },
+          {
+            "type": "Text",
+            "props": {
+              "id": "Text-contact",
+              "text": "Tell us where the handoffs break. We’ll propose a focused engagement within a week.",
+              "align": "center"
+            }
+          },
+          {
+            "type": "Spacer",
+            "props": {
+              "id": "Spacer-4",
+              "size": 20
+            }
+          },
+          {
+            "type": "Button",
+            "props": {
+              "id": "Button-contact",
+              "label": "Email Sync Consulting",
+              "href": "mailto:hello@syncconsulting.example",
+              "variant": "primary"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Footer",
+      "props": {
+        "id": "Footer-1",
+        "brand": "Sync Consulting",
+        "contact": "hello@syncconsulting.example",
+        "link1Label": "Services",
+        "link1Href": "#services",
+        "link2Label": "Approach",
+        "link2Href": "#approach",
+        "link3Label": "Contact",
+        "link3Href": "#contact"
+      }
+    }
+  ]
+}
