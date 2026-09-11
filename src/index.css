@@ -1,11 +1,101 @@
+@font-face {
+  font-family: 'Gafiya';
+  src: url('./assets/fonts/Gafiya-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hamburg Signature';
+  src: url('./assets/fonts/Hamburg-Signature.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Runiga';
+  src: url('./assets/fonts/Runiga.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Moralana';
+  src: url('./assets/fonts/Moralana.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sellendra';
+  src: url('./assets/fonts/Sellendra.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Milker';
+  src: url('./assets/fonts/Milker.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orange Avenue';
+  src: url('./assets/fonts/Orange-Avenue.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Artisan';
+  src: url('./assets/fonts/The-Artisan.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Groote';
+  src: url('./assets/fonts/Groote-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --sc-ink: #111111;
   --sc-muted: #6a6a6a;
   --sc-deep: #ffffff;
   --sc-panel: #f6f4f1;
   --sc-line: #e6e4e1;
-  --sc-display: 'Newsreader', 'Times New Roman', serif;
-  --sc-body: 'Inter', 'Helvetica Neue', sans-serif;
+  --sc-font-newsreader: 'Newsreader', 'Times New Roman', serif;
+  --sc-font-inter: 'Inter', 'Helvetica Neue', sans-serif;
+  --sc-font-poppins: 'Poppins', 'Helvetica Neue', sans-serif;
+  --sc-font-montserrat: 'Montserrat', 'Helvetica Neue', sans-serif;
+  --sc-font-georgia: Georgia, 'Times New Roman', serif;
+  --sc-font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --sc-font-fraunces: 'Fraunces', Georgia, serif;
+  --sc-font-spectral: 'Spectral', Georgia, serif;
+  --sc-font-instrument: 'Instrument Sans', 'Helvetica Neue', sans-serif;
+  --sc-font-gafiya: 'Gafiya', Georgia, serif;
+  --sc-font-hamburg: 'Hamburg Signature', 'Snell Roundhand', cursive;
+  --sc-font-runiga: 'Runiga', Georgia, serif;
+  --sc-font-moralana: 'Moralana', Georgia, serif;
+  --sc-font-sellendra: 'Sellendra', Georgia, serif;
+  --sc-font-milker: 'Milker', 'Helvetica Neue', sans-serif;
+  --sc-font-orange: 'Orange Avenue', Georgia, serif;
+  --sc-font-artisan: 'The Artisan', Georgia, serif;
+  --sc-font-groote: 'Groote', Georgia, serif;
+  --sc-display: var(--sc-font-newsreader);
+  --sc-body: var(--sc-font-inter);
 }
 
 * {
@@ -240,8 +330,8 @@ button {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  min-height: clamp(16rem, 34vh, 22rem);
-  padding: clamp(4.5rem, 11vh, 7.5rem) 2.4rem 2.8rem;
+  min-height: var(--sc-hero-height, 12.5rem);
+  padding: 2.4rem 2.4rem 2rem;
   overflow: hidden;
   background: #ffffff;
 }
@@ -253,6 +343,19 @@ button {
 .sc-hero--left .sc-hero__content,
 .sc-hero--left h1 {
   text-align: left;
+}
+
+.sc-hero--center {
+  justify-content: center;
+}
+
+.sc-hero--center .sc-hero__content,
+.sc-hero--center h1 {
+  text-align: center;
+}
+
+.sc-hero--center .sc-hero__content p {
+  margin-inline: auto;
 }
 
 .sc-hero__media {
@@ -271,27 +374,42 @@ button {
 .sc-hero__content {
   position: relative;
   z-index: 1;
-  max-width: 18ch;
+  width: min(100%, var(--sc-hero-headline-width, 18ch));
+  max-width: min(100%, var(--sc-hero-headline-width, 18ch));
   text-align: right;
 }
 
-.sc-brand {
-  margin: 0 0 0.8rem;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
+.sc-font-newsreader { font-family: var(--sc-font-newsreader); }
+.sc-font-inter { font-family: var(--sc-font-inter); }
+.sc-font-poppins { font-family: var(--sc-font-poppins); }
+.sc-font-montserrat { font-family: var(--sc-font-montserrat); }
+.sc-font-georgia { font-family: var(--sc-font-georgia); }
+.sc-font-cormorant { font-family: var(--sc-font-cormorant); }
+.sc-font-fraunces { font-family: var(--sc-font-fraunces); }
+.sc-font-spectral { font-family: var(--sc-font-spectral); }
+.sc-font-instrument { font-family: var(--sc-font-instrument); }
+.sc-font-gafiya { font-family: var(--sc-font-gafiya); }
+.sc-font-hamburg { font-family: var(--sc-font-hamburg); }
+.sc-font-runiga { font-family: var(--sc-font-runiga); }
+.sc-font-moralana { font-family: var(--sc-font-moralana); }
+.sc-font-sellendra { font-family: var(--sc-font-sellendra); }
+.sc-font-milker { font-family: var(--sc-font-milker); }
+.sc-font-orange { font-family: var(--sc-font-orange); }
+.sc-font-artisan { font-family: var(--sc-font-artisan); }
+.sc-font-groote { font-family: var(--sc-font-groote); }
 
 .sc-hero h1 {
   margin: 0;
-  font-family: var(--sc-display);
   font-weight: 400;
-  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  font-size: var(--sc-hero-headline-size, clamp(2.6rem, 5.4vw, 4.6rem));
   line-height: 1.02;
   letter-spacing: -0.03em;
   white-space: pre-line;
   color: #111111;
+}
+
+.sc-hero h1.sc-hero__headline--bold {
+  font-weight: 650;
 }
 
 .sc-hero p {
@@ -301,26 +419,34 @@ button {
   max-width: 34rem;
 }
 
-.sc-cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.4rem;
+.sc-hero h1.sc-font-hamburg,
+.sc-heading.sc-font-hamburg {
+  letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
 .sc-btn {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.7rem 1.15rem;
   border-radius: 999px;
   text-decoration: none;
+  font-family: inherit;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border: 1px solid #111111;
+  cursor: pointer;
   transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.sc-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
 }
 
 .sc-btn:hover {
@@ -443,8 +569,7 @@ button {
   }
 
   .sc-hero {
-    padding: 3.5rem 1.2rem 2rem;
-    min-height: 12rem;
+    padding: 2rem 1.2rem 1.5rem;
   }
 }
 
@@ -474,7 +599,6 @@ button {
 }
 
 .sc-heading {
-  font-family: var(--sc-display);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -678,6 +802,162 @@ button {
 .sc-edit-toggle:hover {
   color: var(--sc-ink);
   opacity: 1;
+}
+
+.sc-booking {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(17, 17, 17, 0.18);
+}
+
+.sc-booking__panel {
+  position: relative;
+  width: min(22rem, 100%);
+  max-height: min(32rem, calc(100vh - 3rem));
+  overflow: auto;
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid var(--sc-line);
+  border-radius: 1.15rem;
+}
+
+.sc-booking__mark {
+  margin: 0 0 0.4rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-booking__title {
+  margin: 0 0 1rem;
+  padding-right: 1.5rem;
+  font-family: var(--sc-display);
+  font-weight: 400;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+
+.sc-booking__form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.sc-booking__form .sc-btn {
+  align-self: center;
+}
+
+.sc-booking__checks {
+  display: flex;
+  gap: 1.4rem;
+}
+
+.sc-booking__check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+  cursor: pointer;
+}
+
+.sc-booking__check input {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin: 0;
+  accent-color: #111111;
+}
+
+.sc-booking__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-booking__field input,
+.sc-booking__field textarea {
+  width: 100%;
+  padding: 0.45rem 0 0.5rem;
+  border: 0;
+  border-bottom: 1px solid #111111;
+  background: transparent;
+  color: var(--sc-ink);
+  font-family: var(--sc-body);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sc-booking__field input:focus,
+.sc-booking__field textarea:focus {
+  outline: none;
+  border-bottom-width: 2px;
+}
+
+.sc-booking__field textarea {
+  resize: vertical;
+  min-height: 3.5rem;
+}
+
+.sc-booking__close {
+  appearance: none;
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sc-muted);
+  cursor: pointer;
+}
+
+.sc-booking__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.sc-booking__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #b91c1c;
+}
+
+.sc-booking__thanks {
+  margin: 0 0 1.4rem;
+  color: var(--sc-muted);
+  font-size: 1.05rem;
+}
+
+.sc-booking__close:hover {
+  color: var(--sc-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {

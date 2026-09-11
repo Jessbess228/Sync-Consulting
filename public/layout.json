@@ -8,7 +8,6 @@
     {
       "type": "Header",
       "props": {
-        "id": "Header-1",
         "line1": "SYNC",
         "line2": "CONSULTING",
         "line3": "",
@@ -25,28 +24,40 @@
             "label": "Contact",
             "href": "#contact"
           }
-        ]
+        ],
+        "id": "Header-1"
+      }
+    },
+    {
+      "type": "Divider",
+      "props": {
+        "id": "Divider-f4200aa2-741a-4fc1-92f3-14a09266ac8f"
       }
     },
     {
       "type": "Hero",
       "props": {
+        "headline": "Sonja Hensby",
+        "headlineAlign": "center",
+        "headlineWidth": 900,
+        "headlineSize": 72,
+        "height": 100,
+        "headlineFont": "hamburg",
+        "headlineBold": false,
+        "subcopy": "",
+        "imageUrl": "",
         "id": "Hero-1",
         "brand": "",
-        "headline": "Sonja's site",
-        "headlineAlign": "right",
-        "subcopy": "",
         "primaryCtaLabel": "",
         "primaryCtaHref": "#contact",
         "secondaryCtaLabel": "",
-        "secondaryCtaHref": "#services",
-        "imageUrl": ""
+        "secondaryCtaHref": "#services"
       }
     },
     {
       "type": "Filmstrip",
       "props": {
-        "id": "Filmstrip-1",
+        "height": 400,
         "images": [
           {
             "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
@@ -73,7 +84,7 @@
             "alt": "Library alcove"
           }
         ],
-        "height": 400
+        "id": "Filmstrip-1"
       }
     },
     {
@@ -83,32 +94,34 @@
           {
             "type": "Heading",
             "props": {
-              "id": "Heading-services",
               "text": "Interior Design",
               "level": "h2",
-              "align": "left"
+              "align": "left",
+              "font": "newsreader",
+              "id": "Heading-services"
             }
           },
           {
             "type": "Spacer",
             "props": {
-              "id": "Spacer-1",
-              "size": 20
+              "size": 20,
+              "id": "Spacer-1"
             }
           },
           {
             "type": "Text",
             "props": {
-              "id": "Text-services-intro",
               "text": "Practical systems for growing teams — light enough to adopt, strong enough to stick.",
-              "align": "left"
+              "align": "left",
+              "font": "inter",
+              "id": "Text-services-intro"
             }
           },
           {
             "type": "Spacer",
             "props": {
-              "id": "Spacer-2",
-              "size": 28
+              "size": 28,
+              "id": "Spacer-2"
             }
           },
           {
@@ -118,18 +131,20 @@
                 {
                   "type": "Heading",
                   "props": {
-                    "id": "Heading-svc-3",
                     "text": "Org alignment",
                     "level": "h3",
-                    "align": "left"
+                    "align": "left",
+                    "font": "newsreader",
+                    "id": "Heading-svc-3"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
-                    "id": "Text-svc-3",
                     "text": "Translate strategy into ownership maps teams can actually run.",
-                    "align": "left"
+                    "align": "left",
+                    "font": "inter",
+                    "id": "Text-svc-3"
                   }
                 }
               ],
@@ -137,18 +152,20 @@
                 {
                   "type": "Heading",
                   "props": {
-                    "id": "Heading-svc-2",
                     "text": "Delivery systems",
                     "level": "h3",
-                    "align": "left"
+                    "align": "left",
+                    "font": "newsreader",
+                    "id": "Heading-svc-2"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
-                    "id": "Text-svc-2",
                     "text": "Tighten the path from idea to shipped work without adding ceremony.",
-                    "align": "left"
+                    "align": "left",
+                    "font": "inter",
+                    "id": "Text-svc-2"
                   }
                 }
               ],
@@ -156,37 +173,43 @@
                 {
                   "type": "Heading",
                   "props": {
-                    "id": "Heading-svc-1",
                     "text": "Operating cadence",
                     "level": "h3",
-                    "align": "left"
+                    "align": "left",
+                    "font": "newsreader",
+                    "id": "Heading-svc-1"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
-                    "id": "Text-svc-1",
                     "text": "Install a weekly rhythm that keeps priorities visible and decisions moving.",
-                    "align": "left"
+                    "align": "left",
+                    "font": "inter",
+                    "id": "Text-svc-1"
                   }
                 }
               ],
-              "id": "Columns-services",
               "columns": "3",
               "gap": 24,
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
               "leftAlign": "left",
               "rightAlign": "left",
-              "thirdAlign": "left"
+              "thirdAlign": "left",
+              "id": "Columns-services"
             }
           }
         ],
-        "id": "Section-services",
-        "background": "deep",
+        "background": "panel",
         "width": "default",
         "padding": "md",
-        "anchorId": "services",
         "paddingLeft": 250,
-        "paddingRight": 250
+        "paddingRight": 250,
+        "anchorId": "services",
+        "id": "Section-services"
       }
     },
     {
@@ -207,27 +230,30 @@
                 {
                   "type": "Image",
                   "props": {
-                    "id": "Image-approach",
                     "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
                     "alt": "Calm interior workspace",
-                    "width": 100
+                    "width": 100,
+                    "align": "left",
+                    "id": "Image-approach"
                   }
                 },
                 {
                   "type": "Heading",
                   "props": {
-                    "id": "Heading-8255d910-a04c-4a4b-a0b8-3ac352f47976",
                     "text": "Title",
                     "level": "h2",
-                    "align": "center"
+                    "align": "center",
+                    "font": "newsreader",
+                    "id": "Heading-8255d910-a04c-4a4b-a0b8-3ac352f47976"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
-                    "id": "Text-approach",
                     "text": "We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.",
-                    "align": "center"
+                    "align": "center",
+                    "font": "inter",
+                    "id": "Text-approach"
                   }
                 }
               ],
@@ -235,50 +261,60 @@
                 {
                   "type": "Image",
                   "props": {
-                    "id": "Image-9f0212b8-bea4-472a-a3e5-6f99db2a8941",
                     "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
-                    "alt": "Calm interior workspace"
+                    "alt": "Calm interior workspace",
+                    "width": 100,
+                    "align": "left",
+                    "id": "Image-9f0212b8-bea4-472a-a3e5-6f99db2a8941"
                   }
                 },
                 {
                   "type": "Heading",
                   "props": {
-                    "id": "Heading-approach",
                     "text": "Title",
                     "level": "h2",
-                    "align": "center"
+                    "align": "center",
+                    "font": "newsreader",
+                    "id": "Heading-approach"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
-                    "id": "Text-ef53255f-4cfd-487e-a8be-c8b60a72ad77",
                     "text": "We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.",
-                    "align": "center"
+                    "align": "center",
+                    "font": "inter",
+                    "id": "Text-ef53255f-4cfd-487e-a8be-c8b60a72ad77"
                   }
                 },
                 {
                   "type": "Spacer",
                   "props": {
-                    "id": "Spacer-3",
-                    "size": 16
+                    "size": 16,
+                    "id": "Spacer-3"
                   }
                 }
               ],
-              "id": "Columns-approach",
               "columns": "2",
               "gap": 28,
-              "leftAlign": "left"
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "leftAlign": "left",
+              "rightAlign": "left",
+              "thirdAlign": "left",
+              "id": "Columns-approach"
             }
           }
         ],
-        "id": "Section-approach",
         "background": "grid",
         "width": "default",
         "padding": "sm",
-        "anchorId": "approach",
         "paddingLeft": 80,
-        "paddingRight": 80
+        "paddingRight": 80,
+        "anchorId": "approach",
+        "id": "Section-approach"
       }
     },
     {
@@ -288,25 +324,27 @@
           {
             "type": "Heading",
             "props": {
-              "id": "Heading-contact",
               "text": "Book a Consultation",
               "level": "h2",
-              "align": "center"
+              "align": "center",
+              "font": "newsreader",
+              "id": "Heading-contact"
             }
           },
           {
             "type": "Text",
             "props": {
-              "id": "Text-contact",
               "text": "Tell us where the handoffs break. We’ll propose a focused engagement within a week.",
-              "align": "center"
+              "align": "center",
+              "font": "inter",
+              "id": "Text-contact"
             }
           },
           {
             "type": "Spacer",
             "props": {
-              "id": "Spacer-4",
-              "size": 20
+              "size": 20,
+              "id": "Spacer-4"
             }
           },
           {
@@ -317,42 +355,51 @@
                 {
                   "type": "Button",
                   "props": {
-                    "id": "Button-contact",
                     "label": "Contact",
-                    "href": "mailto:hello@syncconsulting.example",
-                    "variant": "primary"
+                    "href": "",
+                    "variant": "primary",
+                    "withForm": true,
+                    "formTitle": "Book a chat",
+                    "id": "Button-contact",
+                    "formText": ""
                   }
                 }
               ],
               "left": [],
-              "id": "Columns-d6623717-5ade-4014-82e4-d03831b08ddc",
               "columns": "3",
               "gap": 24,
-              "rightAlign": "center",
+              "paddingTop": 0,
+              "paddingRight": 0,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
               "leftAlign": "left",
-              "thirdAlign": "left"
+              "rightAlign": "center",
+              "thirdAlign": "left",
+              "id": "Columns-d6623717-5ade-4014-82e4-d03831b08ddc"
             }
           }
         ],
-        "id": "Section-contact",
-        "background": "deep",
+        "background": "panel",
         "width": "narrow",
         "padding": "md",
-        "anchorId": "contact"
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "anchorId": "contact",
+        "id": "Section-contact"
       }
     },
     {
       "type": "Footer",
       "props": {
-        "id": "Footer-1",
         "brand": "Sync Consulting",
-        "contact": "hello@syncconsulting.example",
+        "contact": "sonjahensby@yahoo.com.au",
         "link1Label": "Services",
         "link1Href": "#services",
         "link2Label": "Approach",
         "link2Href": "#approach",
         "link3Label": "Contact",
-        "link3Href": "#contact"
+        "link3Href": "#contact",
+        "id": "Footer-1"
       }
     }
   ],

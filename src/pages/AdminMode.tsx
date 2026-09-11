@@ -4,6 +4,7 @@ import { Puck, type Data } from '@puckeditor/core'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { checkCmsSession, fetchPublicLayout, loginCms, saveLayout } from '../lib/layoutStorage'
+import { applyComponentDefaults } from '../puck/applyDefaults'
 import { puckConfig } from '../puck/config'
 import { NumberField } from '../puck/NumberField'
 
@@ -96,7 +97,7 @@ export function AdminMode() {
     fetchPublicLayout()
       .then((layout) => {
         if (cancelled) return
-        setData(layout)
+        setData(applyComponentDefaults(layout, puckConfig))
         setStatus('idle')
       })
       .catch(() => {
@@ -151,6 +152,7 @@ export function AdminMode() {
       <Puck
         config={puckConfig}
         data={data}
+        iframe={{ syncHostStyles: true, waitForStyles: true }}
         onChange={handleChange}
         overrides={{
           fieldTypes: {

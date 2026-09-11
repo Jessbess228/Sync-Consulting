@@ -107,6 +107,50 @@ router.put('/cms-api/layout', async (ctx) => {
   ctx.body = data
 })
 
+const BOOKINGS_PATH = resolve(ROOT, 'cms', 'bookings.json')
+
+router.post('/cms-api/bookings', async (ctx) => {
+  const body = ctx.request.body || {}
+  const name = typeof body.name === 'string' ? body.name.trim() : ''
+  const email = typeof body.email === 'string' ? body.email.trim() : ''
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
+  const message = typeof body.message === 'string' ? body.message.trim() : ''
+  const txt = Boolean(body.txt)
+  const call = Boolean(body.call)
+
+  if (!name || (!email && !phone)) {
+    ctx.status = 400
+    ctx.body = { error: 'Name and an email or phone number are required' }
+    return
+  }
+
+  let list = []
+  if (existsSync(BOOKINGS_PATH)) {
+    try {
+      const parsed = JSON.parse(readFileSync(BOOKINGS_PATH, 'utf8'))
+      if (Array.isArray(parsed)) list = parsed
+    } catch {
+      list = []
+    }
+  }
+
+  list.push({
+    id: crypto.randomUUID(),
+    at: new Date().toISOString(),
+    name,
+    email,
+    phone,
+    message,
+    txt,
+    call,
+  })
+
+  await mkdir(dirname(BOOKINGS_PATH), { recursive: true })
+  await writeFile(BOOKINGS_PATH, `${JSON.stringify(list, null, 2)}\n`, 'utf8')
+  ctx.status = 201
+  ctx.body = { ok: true }
+})
+
 const app = new Koa()
 app.use(
   bodyParser({

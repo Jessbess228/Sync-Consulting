@@ -28,6 +28,15 @@ function clamp(value: number, min?: number, max?: number) {
   return next
 }
 
+function toInputValue(value: unknown) {
+  if (typeof value === 'number' && Number.isFinite(value)) return String(value)
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value)
+    if (!Number.isNaN(parsed)) return String(parsed)
+  }
+  return ''
+}
+
 export function NumberField({
   field,
   value,
@@ -38,21 +47,21 @@ export function NumberField({
   readOnly,
   Label,
 }: NumberFieldProps) {
-  const [draft, setDraft] = useState(value == null ? '' : String(value))
+  const [draft, setDraft] = useState(() => toInputValue(value))
 
   useEffect(() => {
-    setDraft(value == null ? '' : String(value))
+    setDraft(toInputValue(value))
   }, [value])
 
   const commit = (raw: string) => {
     if (raw.trim() === '') {
-      setDraft(value == null ? '' : String(value))
+      setDraft(toInputValue(value))
       return
     }
 
     const parsed = Number(raw)
     if (Number.isNaN(parsed)) {
-      setDraft(value == null ? '' : String(value))
+      setDraft(toInputValue(value))
       return
     }
 

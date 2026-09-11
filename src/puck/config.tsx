@@ -1,7 +1,9 @@
 import type { Config, Slot } from '@puckeditor/core'
 import { Filmstrip } from './Filmstrip'
 import { fluidPx } from './fluidPx'
+import { BookingButton } from '../lib/BookingForm'
 import { SiteLink } from '../lib/SiteLink'
+import { fontClass, fontField, type FontId } from './fonts'
 
 type SyncComponents = {
   Header: {
@@ -11,14 +13,14 @@ type SyncComponents = {
     links: Array<{ label: string; href: string }>
   }
   Hero: {
-    brand: string
     headline: string
-    headlineAlign: 'left' | 'right'
+    headlineAlign: 'left' | 'center' | 'right'
+    headlineWidth: number
+    headlineSize: number
+    height: number
+    headlineFont: FontId
+    headlineBold: boolean
     subcopy: string
-    primaryCtaLabel: string
-    primaryCtaHref: string
-    secondaryCtaLabel: string
-    secondaryCtaHref: string
     imageUrl: string
   }
   Filmstrip: {
@@ -52,10 +54,12 @@ type SyncComponents = {
     text: string
     level: 'h1' | 'h2' | 'h3'
     align: 'left' | 'center' | 'right'
+    font: FontId
   }
   Text: {
     text: string
     align: 'left' | 'center' | 'right'
+    font: FontId
   }
   Image: {
     src: string
@@ -67,6 +71,8 @@ type SyncComponents = {
     label: string
     href: string
     variant: 'primary' | 'ghost'
+    withForm: boolean
+    formTitle: string
   }
   Spacer: {
     size: number
@@ -164,73 +170,90 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
     Hero: {
       label: 'Hero',
       fields: {
-        brand: { type: 'text', label: 'Eyebrow (optional)' },
         headline: { type: 'textarea', label: 'Headline' },
         headlineAlign: {
           type: 'radio',
           label: 'Headline align',
           options: [
             { label: 'Left', value: 'left' },
+            { label: 'Centre', value: 'center' },
             { label: 'Right', value: 'right' },
           ],
         },
+        headlineWidth: { type: 'number', label: 'Headline width (px)', min: 80, max: 1200 },
+        headlineSize: { type: 'number', label: 'Headline size (px)', min: 24, max: 200 },
+        height: { type: 'number', label: 'Height (px)', min: 80, max: 900 },
+        headlineFont: fontField('Headline font'),
+        headlineBold: {
+          type: 'custom',
+          label: 'Bold',
+          render: ({ value, onChange, id, name, readOnly }) => (
+            <label className="puck-checkbox-row" htmlFor={id}>
+              <input
+                className="puck-checkbox"
+                id={id}
+                name={name}
+                type="checkbox"
+                checked={Boolean(value)}
+                disabled={readOnly}
+                onChange={(event) => onChange(event.currentTarget.checked)}
+              />
+              Bold
+            </label>
+          ),
+        },
         subcopy: { type: 'textarea', label: 'Supporting copy' },
-        primaryCtaLabel: { type: 'text', label: 'Primary CTA label' },
-        primaryCtaHref: { type: 'text', label: 'Primary CTA href' },
-        secondaryCtaLabel: { type: 'text', label: 'Secondary CTA label' },
-        secondaryCtaHref: { type: 'text', label: 'Secondary CTA href' },
         imageUrl: { type: 'text', label: 'Background image URL (optional)' },
       },
       defaultProps: {
-        brand: '',
         headline: 'Headline',
         headlineAlign: 'right',
+        headlineWidth: 280,
+        headlineSize: 72,
+        height: 200,
+        headlineFont: 'newsreader',
+        headlineBold: false,
         subcopy: '',
-        primaryCtaLabel: '',
-        primaryCtaHref: '#',
-        secondaryCtaLabel: '',
-        secondaryCtaHref: '#',
         imageUrl: '',
       },
       render: ({
-        brand,
         headline,
         headlineAlign,
+        headlineWidth,
+        headlineSize,
+        height,
+        headlineFont,
+        headlineBold,
         subcopy,
-        primaryCtaLabel,
-        primaryCtaHref,
-        secondaryCtaLabel,
-        secondaryCtaHref,
         imageUrl,
-        puck,
-      }) => (
-        <section className={`sc-hero sc-hero--${headlineAlign}`}>
+      }) => {
+        const heroHeight = height || 200
+        const typeSize = headlineSize || 72
+        return (
+        <section
+          className={`sc-hero sc-hero--${headlineAlign}`}
+          style={{
+            ['--sc-hero-headline-width' as string]: fluidPx(headlineWidth || 280, 200, 1200),
+            ['--sc-hero-headline-size' as string]: fluidPx(typeSize, 24, typeSize),
+            ['--sc-hero-height' as string]: fluidPx(heroHeight, 80, heroHeight),
+          }}
+        >
           {imageUrl ? (
             <div className="sc-hero__media" aria-hidden="true">
               <img src={imageUrl} alt="" />
             </div>
           ) : null}
           <div className="sc-hero__content">
-            {brand ? <p className="sc-brand">{brand}</p> : null}
-            <h1>{headline}</h1>
+            <h1
+              className={`${fontClass(headlineFont, 'newsreader')}${headlineBold ? ' sc-hero__headline--bold' : ''}`}
+            >
+              {headline}
+            </h1>
             {subcopy ? <p>{subcopy}</p> : null}
-            {primaryCtaLabel || secondaryCtaLabel ? (
-              <div className="sc-cta-row">
-                {primaryCtaLabel ? (
-                  <SiteLink className="sc-btn sc-btn--primary" href={primaryCtaHref} editing={puck.isEditing}>
-                    {primaryCtaLabel}
-                  </SiteLink>
-                ) : null}
-                {secondaryCtaLabel ? (
-                  <SiteLink className="sc-btn sc-btn--ghost" href={secondaryCtaHref} editing={puck.isEditing}>
-                    {secondaryCtaLabel}
-                  </SiteLink>
-                ) : null}
-              </div>
-            ) : null}
           </div>
         </section>
-      ),
+        )
+      },
     },
 
     Filmstrip: {
@@ -433,17 +456,21 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             { label: 'Right', value: 'right' },
           ],
         },
+        font: fontField('Font'),
       },
       defaultProps: {
         text: 'Heading',
         level: 'h2',
         align: 'left',
+        font: 'newsreader',
       },
-      render: ({ text, level, align, puck }) => {
+      render: ({ text, level, align, font, puck }) => {
         const Tag = level
         return (
           <div ref={puck.dragRef} className="sc-drag-target">
-            <Tag className={`sc-heading sc-heading--${level} sc-align-${align}`}>{text}</Tag>
+            <Tag className={`sc-heading sc-heading--${level} sc-align-${align} ${fontClass(font, 'newsreader')}`}>
+              {text}
+            </Tag>
           </div>
         )
       },
@@ -463,13 +490,15 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             { label: 'Right', value: 'right' },
           ],
         },
+        font: fontField('Font'),
       },
       defaultProps: {
         text: 'Supporting paragraph goes here.',
         align: 'left',
+        font: 'inter',
       },
-      render: ({ text, align, puck }) => (
-        <p ref={puck.dragRef} className={`sc-text sc-align-${align}`}>
+      render: ({ text, align, font, puck }) => (
+        <p ref={puck.dragRef} className={`sc-text sc-align-${align} ${fontClass(font, 'inter')}`}>
           {text}
         </p>
       ),
@@ -510,7 +539,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
     },
 
     Button: {
-      label: 'Button / CTA',
+      label: 'Button',
       inline: true,
       fields: {
         label: { type: 'text', label: 'Label' },
@@ -523,21 +552,56 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             { label: 'Ghost', value: 'ghost' },
           ],
         },
+        withForm: {
+          type: 'custom',
+          label: 'With form',
+          render: ({ value, onChange, id, name, readOnly }) => (
+            <label className="puck-checkbox-row" htmlFor={id}>
+              <input
+                className="puck-checkbox"
+                id={id}
+                name={name}
+                type="checkbox"
+                checked={Boolean(value)}
+                disabled={readOnly}
+                onChange={(event) => onChange(event.currentTarget.checked)}
+              />
+              With form
+            </label>
+          ),
+        },
+        formTitle: { type: 'text', label: 'Form title' },
       },
       defaultProps: {
         label: 'Get started',
         href: '#',
         variant: 'primary',
+        withForm: false,
+        formTitle: 'Book a visit',
       },
-      render: ({ label, href, variant, puck }) => (
+      resolveFields: ({ props }, { fields }) => {
+        if (props.withForm) return fields
+        const { formTitle: _formTitle, ...rest } = fields
+        return rest
+      },
+      render: ({ label, href, variant, withForm, formTitle, puck }) => (
         <div ref={puck.dragRef} className="sc-btn-row">
-          <SiteLink
-            className={`sc-btn sc-btn--${variant === 'ghost' ? 'ghost' : 'primary'}`}
-            href={href}
-            editing={puck.isEditing}
-          >
-            {label}
-          </SiteLink>
+          {withForm ? (
+            <BookingButton
+              label={label}
+              variant={variant}
+              formTitle={formTitle}
+              editing={puck.isEditing}
+            />
+          ) : (
+            <SiteLink
+              className={`sc-btn sc-btn--${variant === 'ghost' ? 'ghost' : 'primary'}`}
+              href={href}
+              editing={puck.isEditing}
+            >
+              {label}
+            </SiteLink>
+          )}
         </div>
       ),
     },
@@ -607,7 +671,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             <div className="sc-footer__inner">
               <div>
                 <p className="sc-footer__brand">{brand}</p>
-                <p className="sc-footer__meta">{contact}</p>
+                {contact ? <p className="sc-footer__meta">{contact}</p> : null}
               </div>
               <ul className="sc-footer__links">
                 {links.map((link) => (
