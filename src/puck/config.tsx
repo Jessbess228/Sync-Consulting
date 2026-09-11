@@ -1,11 +1,9 @@
 import type { Config, Slot } from '@puckeditor/core'
-import { messages } from '../pages/Home.messages'
+import { Filmstrip } from './Filmstrip'
+import { fluidPx } from './fluidPx'
+import { SiteLink } from '../lib/SiteLink'
 
 export type SyncComponents = {
-  Colourpicker: {
-    label: string
-    value: string
-  }
   Header: {
     line1: string
     line2: string
@@ -25,39 +23,50 @@ export type SyncComponents = {
   }
   Filmstrip: {
     images: Array<{ src: string; alt: string }>
+    height: number
   }
   Section: {
     background: 'deep' | 'panel' | 'grid'
     width: 'default' | 'narrow'
     padding: 'sm' | 'md' | 'lg'
+    paddingLeft: number
+    paddingRight: number
     anchorId: string
     content: Slot
   }
   Columns: {
     columns: '2' | '3'
     gap: number
-    content: Slot
+    paddingTop: number
+    paddingRight: number
+    paddingBottom: number
+    paddingLeft: number
+    leftAlign: 'left' | 'center' | 'right'
+    rightAlign: 'left' | 'center' | 'right'
+    thirdAlign: 'left' | 'center' | 'right'
+    left: Slot
+    right: Slot
+    third: Slot
   }
   Heading: {
     text: string
     level: 'h1' | 'h2' | 'h3'
-    align: 'left' | 'center'
+    align: 'left' | 'center' | 'right'
   }
   Text: {
     text: string
-    align: 'left' | 'center'
+    align: 'left' | 'center' | 'right'
   }
   Image: {
     src: string
     alt: string
+    width: number
+    align: 'left' | 'center' | 'right'
   }
   Button: {
     label: string
     href: string
     variant: 'primary' | 'ghost'
-  }
-  Services: {
-    items: Array<{ title: string; description: string; icon: string }>
   }
   Spacer: {
     size: number
@@ -79,6 +88,15 @@ type RootProps = {
   title: string
 }
 
+const columnAlignField = {
+  type: 'radio' as const,
+  options: [
+    { label: 'Left', value: 'left' },
+    { label: 'Middle', value: 'center' },
+    { label: 'Right', value: 'right' },
+  ],
+}
+
 export const puckConfig: Config<SyncComponents, RootProps> = {
   categories: {
     layout: {
@@ -87,44 +105,10 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
     },
     content: {
       title: 'Content',
-      components: ['Header', 'Hero', 'Filmstrip', 'Heading', 'Text', 'Image', 'Button', 'Services', 'Footer', 'Colourpicker'],
+      components: ['Header', 'Hero', 'Filmstrip', 'Heading', 'Text', 'Image', 'Button', 'Footer'],
     },
   },
   components: {
-    Colourpicker: {
-      label: 'Colourpicker',
-      fields: {
-        label: { type: 'text', label: 'Label' },
-        value: {
-          type: 'custom',
-          label: 'Colour',
-          render: ({ value, onChange }) => (
-            <input
-              type="color"
-              value={value || '#1f2937'}
-              onChange={(event) => onChange(event.currentTarget.value)}
-              aria-label="Colour"
-            />
-          ),
-        },
-      },
-      defaultProps: {
-        label: messages.defaults.colourLabel,
-        value: '#1f2937',
-      },
-      render: ({ label, value }) => (
-        <div className="sc-colourpicker">
-          <span
-            className="sc-colourpicker__swatch"
-            style={{ background: value || '#1f2937' }}
-            aria-hidden="true"
-          />
-          <span>{label}</span>
-          <code>{value || '#1f2937'}</code>
-        </div>
-      ),
-    },
-
     Header: {
       label: 'Header',
       fields: {
@@ -140,32 +124,36 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             href: { type: 'text', label: 'Href' },
           },
           defaultItemProps: {
-            label: messages.defaults.navLink,
+            label: 'Page',
             href: '#',
           },
         },
       },
       defaultProps: {
-        line1: messages.header.line1,
-        line2: messages.header.line2,
-        line3: messages.header.line3,
-        links: messages.header.links.map((link) => ({ ...link })),
+        line1: 'Brand',
+        line2: '',
+        line3: '',
+        links: [{ label: 'Page', href: '#' }],
       },
-      render: ({ line1, line2, line3, links }) => {
+      render: ({ line1, line2, line3, links, puck }) => {
         const lines = [line1, line2, line3].filter((line) => line.trim())
         return (
           <header className="sc-header">
-            <a className="sc-wordmark" href="#/">
+            <a
+              className="sc-wordmark"
+              href="#/"
+              onClick={puck.isEditing ? (event) => event.preventDefault() : undefined}
+            >
               {lines.map((line, index) => (
                 <span key={`${line}-${index}`}>{line}</span>
               ))}
               <i className="sc-wordmark__rule" aria-hidden="true" />
             </a>
-            <nav className="sc-nav" aria-label={messages.header.navAriaLabel}>
+            <nav className="sc-nav" aria-label="Primary">
               {links.map((link) => (
-                <a key={link.href + link.label} href={link.href}>
+                <SiteLink key={link.href + link.label} href={link.href} editing={puck.isEditing}>
                   {link.label}
-                </a>
+                </SiteLink>
               ))}
             </nav>
           </header>
@@ -194,14 +182,14 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         imageUrl: { type: 'text', label: 'Background image URL (optional)' },
       },
       defaultProps: {
-        brand: messages.hero.brand,
-        headline: messages.hero.headline,
+        brand: '',
+        headline: 'Headline',
         headlineAlign: 'right',
-        subcopy: messages.hero.subcopy,
-        primaryCtaLabel: messages.hero.primaryCtaLabel,
-        primaryCtaHref: messages.hero.primaryCtaHref,
-        secondaryCtaLabel: messages.hero.secondaryCtaLabel,
-        secondaryCtaHref: messages.hero.secondaryCtaHref,
+        subcopy: '',
+        primaryCtaLabel: '',
+        primaryCtaHref: '#',
+        secondaryCtaLabel: '',
+        secondaryCtaHref: '#',
         imageUrl: '',
       },
       render: ({
@@ -214,6 +202,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         secondaryCtaLabel,
         secondaryCtaHref,
         imageUrl,
+        puck,
       }) => (
         <section className={`sc-hero sc-hero--${headlineAlign}`}>
           {imageUrl ? (
@@ -228,14 +217,14 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             {primaryCtaLabel || secondaryCtaLabel ? (
               <div className="sc-cta-row">
                 {primaryCtaLabel ? (
-                  <a className="sc-btn sc-btn--primary" href={primaryCtaHref}>
+                  <SiteLink className="sc-btn sc-btn--primary" href={primaryCtaHref} editing={puck.isEditing}>
                     {primaryCtaLabel}
-                  </a>
+                  </SiteLink>
                 ) : null}
                 {secondaryCtaLabel ? (
-                  <a className="sc-btn sc-btn--ghost" href={secondaryCtaHref}>
+                  <SiteLink className="sc-btn sc-btn--ghost" href={secondaryCtaHref} editing={puck.isEditing}>
                     {secondaryCtaLabel}
-                  </a>
+                  </SiteLink>
                 ) : null}
               </div>
             ) : null}
@@ -245,8 +234,9 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
     },
 
     Filmstrip: {
-      label: 'Filmstrip',
+      label: 'Photo row',
       fields: {
+        height: { type: 'number', label: 'Height (px)', min: 80, max: 800 },
         images: {
           type: 'array',
           label: 'Images',
@@ -256,32 +246,23 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             alt: { type: 'text', label: 'Alt text' },
           },
           defaultItemProps: {
-            src: messages.filmstrip.images[0].src,
-            alt: messages.defaults.filmstripImageAlt,
+            src: '',
+            alt: 'Image',
           },
         },
       },
       defaultProps: {
-        images: messages.filmstrip.images.map((image) => ({ ...image })),
+        height: 320,
+        images: [
+          { src: '', alt: 'Photo 1' },
+          { src: '', alt: 'Photo 2' },
+          { src: '', alt: 'Photo 3' },
+          { src: '', alt: 'Photo 4' },
+          { src: '', alt: 'Photo 5' },
+          { src: '', alt: 'Photo 6' },
+        ],
       },
-      render: ({ images }) => (
-        <section className="sc-filmstrip" aria-label={messages.filmstrip.ariaLabel}>
-          <div className="sc-filmstrip__track">
-            {images.map((image, index) => (
-              <figure key={`${image.src}-${index}`}>
-                <img src={image.src} alt={image.alt} />
-              </figure>
-            ))}
-          </div>
-          {images.length > 1 ? (
-            <div className="sc-filmstrip__dots" aria-hidden="true">
-              {images.slice(0, 3).map((_, index) => (
-                <span key={index} className={index === 1 ? 'is-active' : undefined} />
-              ))}
-            </div>
-          ) : null}
-        </section>
-      ),
+      render: ({ images, height }) => <Filmstrip images={images} height={height} />,
     },
 
     Section: {
@@ -300,19 +281,21 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
           type: 'radio',
           label: 'Width',
           options: [
-            { label: 'Default', value: 'default' },
+            { label: 'Full', value: 'default' },
             { label: 'Narrow', value: 'narrow' },
           ],
         },
         padding: {
           type: 'select',
-          label: 'Padding',
+          label: 'Padding top / bottom',
           options: [
             { label: 'Small', value: 'sm' },
             { label: 'Medium', value: 'md' },
             { label: 'Large', value: 'lg' },
           ],
         },
+        paddingLeft: { type: 'number', label: 'Padding left (px)', min: 0, max: 400 },
+        paddingRight: { type: 'number', label: 'Padding right (px)', min: 0, max: 400 },
         anchorId: { type: 'text', label: 'Anchor id (optional)' },
         content: { type: 'slot' },
       },
@@ -320,10 +303,12 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         background: 'deep',
         width: 'default',
         padding: 'md',
+        paddingLeft: 0,
+        paddingRight: 0,
         anchorId: '',
         content: [],
       },
-      render: ({ background, width, padding, anchorId, content: Content }) => {
+      render: ({ background, width, padding, paddingLeft, paddingRight, anchorId, content: Content }) => {
         const pad =
           padding === 'sm'
             ? 'clamp(1.5rem, 4vw, 2.5rem)'
@@ -345,10 +330,12 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             style={{
               background: bg,
               paddingBlock: pad,
+              paddingLeft: fluidPx(paddingLeft),
+              paddingRight: fluidPx(paddingRight),
             }}
           >
             <div className="sc-section__inner">
-              <Content minEmptyHeight={120} />
+              <Content minEmptyHeight={48} />
             </div>
           </section>
         )
@@ -366,25 +353,68 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
             { label: '3', value: '3' },
           ],
         },
-        gap: { type: 'number', label: 'Gap (px)', min: 8, max: 64 },
-        content: { type: 'slot' },
+        gap: { type: 'number', label: 'Gap (px)', min: 0, max: 120 },
+        paddingTop: { type: 'number', label: 'Padding top (px)', min: 0, max: 400 },
+        paddingRight: { type: 'number', label: 'Padding right (px)', min: 0, max: 400 },
+        paddingBottom: { type: 'number', label: 'Padding bottom (px)', min: 0, max: 400 },
+        paddingLeft: { type: 'number', label: 'Padding left (px)', min: 0, max: 400 },
+        leftAlign: { ...columnAlignField, label: 'Left column' },
+        rightAlign: { ...columnAlignField, label: 'Right column' },
+        thirdAlign: { ...columnAlignField, label: 'Third column' },
+        left: { type: 'slot' },
+        right: { type: 'slot' },
+        third: { type: 'slot' },
       },
       defaultProps: {
         columns: '2',
         gap: 24,
-        content: [],
+        paddingTop: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+        paddingLeft: 0,
+        leftAlign: 'left',
+        rightAlign: 'left',
+        thirdAlign: 'left',
+        left: [],
+        right: [],
+        third: [],
       },
-      render: ({ columns, gap, content: Content }) => (
-        <Content
+      render: ({
+        columns,
+        gap,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+        leftAlign,
+        rightAlign,
+        thirdAlign,
+        left: Left,
+        right: Right,
+        third: Third,
+      }) => (
+        <div
           className={`sc-columns sc-columns--${columns}`}
-          style={{ gap }}
-          minEmptyHeight={120}
-        />
+          style={{
+            gap: gap || 0,
+            paddingTop: fluidPx(paddingTop),
+            paddingRight: fluidPx(paddingRight),
+            paddingBottom: fluidPx(paddingBottom),
+            paddingLeft: fluidPx(paddingLeft),
+          }}
+        >
+          <Left className={`sc-column sc-column--${leftAlign || 'left'}`} minEmptyHeight={48} />
+          <Right className={`sc-column sc-column--${rightAlign || 'left'}`} minEmptyHeight={48} />
+          {columns === '3' ? (
+            <Third className={`sc-column sc-column--${thirdAlign || 'left'}`} minEmptyHeight={48} />
+          ) : null}
+        </div>
       ),
     },
 
     Heading: {
       label: 'Heading',
+      inline: true,
       fields: {
         text: { type: 'text', label: 'Text' },
         level: {
@@ -402,29 +432,28 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
           options: [
             { label: 'Left', value: 'left' },
             { label: 'Center', value: 'center' },
+            { label: 'Right', value: 'right' },
           ],
         },
       },
       defaultProps: {
-        text: messages.defaults.heading,
+        text: 'Heading',
         level: 'h2',
         align: 'left',
       },
-      render: ({ text, level, align }) => {
+      render: ({ text, level, align, puck }) => {
         const Tag = level
         return (
-          <Tag
-            className={`sc-heading sc-heading--${level}`}
-            style={{ textAlign: align }}
-          >
-            {text}
-          </Tag>
+          <div ref={puck.dragRef} className="sc-drag-target">
+            <Tag className={`sc-heading sc-heading--${level} sc-align-${align}`}>{text}</Tag>
+          </div>
         )
       },
     },
 
     Text: {
       label: 'Text',
+      inline: true,
       fields: {
         text: { type: 'textarea', label: 'Text' },
         align: {
@@ -433,15 +462,16 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
           options: [
             { label: 'Left', value: 'left' },
             { label: 'Center', value: 'center' },
+            { label: 'Right', value: 'right' },
           ],
         },
       },
       defaultProps: {
-        text: messages.defaults.paragraph,
+        text: 'Supporting paragraph goes here.',
         align: 'left',
       },
-      render: ({ text, align }) => (
-        <p className="sc-text" style={{ textAlign: align }}>
+      render: ({ text, align, puck }) => (
+        <p ref={puck.dragRef} className={`sc-text sc-align-${align}`}>
           {text}
         </p>
       ),
@@ -449,23 +479,41 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
 
     Image: {
       label: 'Image',
+      inline: true,
       fields: {
         src: { type: 'text', label: 'Image URL' },
         alt: { type: 'text', label: 'Alt text' },
+        width: { type: 'number', label: 'Width (%)', min: 10, max: 100 },
+        align: {
+          type: 'radio',
+          label: 'Align',
+          options: [
+            { label: 'Left', value: 'left' },
+            { label: 'Center', value: 'center' },
+            { label: 'Right', value: 'right' },
+          ],
+        },
       },
       defaultProps: {
-        src: messages.approach.imageSrc,
-        alt: messages.defaults.imageAlt,
+        src: '',
+        alt: 'Image',
+        width: 100,
+        align: 'left',
       },
-      render: ({ src, alt }) => (
-        <figure className="sc-image">
-          <img src={src} alt={alt} />
+      render: ({ src, alt, width, align, puck }) => (
+        <figure
+          ref={puck.dragRef}
+          className={`sc-image sc-image--${align || 'left'}`}
+          style={{ width: `${Math.min(100, Math.max(10, width || 100))}%` }}
+        >
+          {src ? <img src={src} alt={alt} /> : <div className="sc-image__placeholder">Image</div>}
         </figure>
       ),
     },
 
     Button: {
       label: 'Button / CTA',
+      inline: true,
       fields: {
         label: { type: 'text', label: 'Label' },
         href: { type: 'text', label: 'Href' },
@@ -479,73 +527,43 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         },
       },
       defaultProps: {
-        label: messages.defaults.buttonLabel,
-        href: messages.hero.primaryCtaHref,
+        label: 'Get started',
+        href: '#',
         variant: 'primary',
       },
-      render: ({ label, href, variant }) => (
-        <a
-          className={`sc-btn sc-btn--${variant === 'ghost' ? 'ghost' : 'primary'}`}
-          href={href}
-        >
-          {label}
-        </a>
-      ),
-    },
-
-    Services: {
-      label: 'Services',
-      fields: {
-        items: {
-          type: 'array',
-          label: 'Services',
-          getItemSummary: (item) => item.title || 'Service',
-          arrayFields: {
-            title: { type: 'text', label: 'Title' },
-            description: { type: 'textarea', label: 'Description' },
-            icon: { type: 'text', label: 'Icon / initials' },
-          },
-          defaultItemProps: {
-            title: messages.defaults.newServiceTitle,
-            description: messages.defaults.newServiceDescription,
-            icon: 'SC',
-          },
-        },
-      },
-      defaultProps: {
-        items: messages.services.items.map((item) => ({ ...item })),
-      },
-      render: ({ items }) => (
-        <div className="sc-services">
-          {items.map((item, index) => (
-            <article className="sc-service" key={`${item.title}-${index}`}>
-              <div className="sc-service__icon">{item.icon || 'SC'}</div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
+      render: ({ label, href, variant, puck }) => (
+        <div ref={puck.dragRef} className="sc-btn-row">
+          <SiteLink
+            className={`sc-btn sc-btn--${variant === 'ghost' ? 'ghost' : 'primary'}`}
+            href={href}
+            editing={puck.isEditing}
+          >
+            {label}
+          </SiteLink>
         </div>
       ),
     },
 
     Spacer: {
       label: 'Spacer',
+      inline: true,
       fields: {
         size: { type: 'number', label: 'Height (px)', min: 8, max: 240 },
       },
       defaultProps: {
         size: 32,
       },
-      render: ({ size }) => (
-        <div className="sc-spacer" style={{ height: size }} aria-hidden="true" />
+      render: ({ size, puck }) => (
+        <div ref={puck.dragRef} className="sc-spacer" style={{ height: size }} aria-hidden="true" />
       ),
     },
 
     Divider: {
       label: 'Divider',
+      inline: true,
       fields: {},
       defaultProps: {},
-      render: () => <hr className="sc-divider" />,
+      render: ({ puck }) => <hr ref={puck.dragRef} className="sc-divider" />,
     },
 
     Footer: {
@@ -561,14 +579,14 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         link3Href: { type: 'text', label: 'Link 3 href' },
       },
       defaultProps: {
-        brand: messages.footer.brand,
-        contact: messages.footer.contact,
-        link1Label: messages.footer.links[0].label,
-        link1Href: messages.footer.links[0].href,
-        link2Label: messages.footer.links[1].label,
-        link2Href: messages.footer.links[1].href,
-        link3Label: messages.footer.links[2].label,
-        link3Href: messages.footer.links[2].href,
+        brand: 'Brand',
+        contact: '',
+        link1Label: 'Link',
+        link1Href: '#',
+        link2Label: '',
+        link2Href: '#',
+        link3Label: '',
+        link3Href: '#',
       },
       render: ({
         brand,
@@ -579,6 +597,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         link2Href,
         link3Label,
         link3Href,
+        puck,
       }) => {
         const links = [
           { label: link1Label, href: link1Href },
@@ -586,7 +605,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
           { label: link3Label, href: link3Href },
         ].filter((link) => link.label)
         return (
-          <footer className="sc-footer" id="contact">
+          <footer className="sc-footer">
             <div className="sc-footer__inner">
               <div>
                 <p className="sc-footer__brand">{brand}</p>
@@ -595,7 +614,9 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
               <ul className="sc-footer__links">
                 {links.map((link) => (
                   <li key={link.href + link.label}>
-                    <a href={link.href}>{link.label}</a>
+                    <SiteLink href={link.href} editing={puck.isEditing}>
+                      {link.label}
+                    </SiteLink>
                   </li>
                 ))}
               </ul>
@@ -610,7 +631,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
       title: { type: 'text', label: 'Page title' },
     },
     defaultProps: {
-      title: messages.pageTitle,
+      title: 'Page',
     },
     render: ({ children }) => <div className="site-shell">{children}</div>,
   },

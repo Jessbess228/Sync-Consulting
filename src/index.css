@@ -97,10 +97,6 @@ button {
   transform: translateY(-1px);
 }
 
-.puck-header-button--secondary {
-  background: #f3f4f6;
-}
-
 .puck-header-status {
   font-size: 0.75rem;
   font-weight: 600;
@@ -108,38 +104,12 @@ button {
   margin-right: auto;
 }
 
-.puck-header-status--offline,
 .puck-header-status--error {
   color: #b91c1c;
 }
 
-.puck-header-status--published {
+.puck-header-status--saved {
   color: #047857;
-}
-
-.puck-import-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sc-colourpicker {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 600;
-}
-
-.sc-colourpicker__swatch {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--sc-line);
-}
-
-.sc-colourpicker code {
-  font-weight: 500;
-  color: var(--sc-muted);
 }
 
 .sc-header {
@@ -293,22 +263,57 @@ button {
 
 .sc-filmstrip {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: filmstrip;
 }
 
 .sc-filmstrip__track {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  outline: none;
+  overscroll-behavior-x: none;
+}
+
+.sc-filmstrip__track:focus-visible {
+  outline: 1px solid #111111;
+  outline-offset: 4px;
+}
+
+.sc-filmstrip__track::-webkit-scrollbar {
+  display: none;
 }
 
 .sc-filmstrip__track figure {
+  flex: 0 0 33.333%;
   margin: 0;
   min-width: 0;
+  scroll-snap-align: start;
 }
 
-.sc-filmstrip__track img {
+.sc-filmstrip__track img,
+.sc-filmstrip__placeholder {
   width: 100%;
-  height: clamp(12rem, 32vw, 22rem);
+  height: var(--sc-filmstrip-height, clamp(10rem, 42cqw, 22rem));
   object-fit: cover;
+}
+
+.sc-filmstrip__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f1ee;
+  color: #9a9690;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .sc-filmstrip__dots {
@@ -318,15 +323,42 @@ button {
   padding: 0.85rem 0 0.4rem;
 }
 
-.sc-filmstrip__dots span {
+.sc-filmstrip__dots button {
+  position: relative;
+  width: 1.15rem;
+  height: 1.15rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.sc-filmstrip__dots button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: #d4d4d4;
+  transform: translate(-50%, -50%);
 }
 
-.sc-filmstrip__dots span.is-active {
+.sc-filmstrip__dots button.is-active::after {
   background: #111111;
+}
+
+@container filmstrip (max-width: 900px) {
+  .sc-filmstrip__track figure {
+    flex-basis: 50%;
+  }
+}
+
+@container filmstrip (max-width: 520px) {
+  .sc-filmstrip__track figure {
+    flex-basis: 100%;
+  }
 }
 
 @media (max-width: 900px) {
@@ -337,15 +369,6 @@ button {
   .sc-hero {
     padding: 3.5rem 1.2rem 2rem;
     min-height: 12rem;
-  }
-
-  .sc-filmstrip__track {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .sc-filmstrip__track img {
-    height: 28vw;
-    min-height: 7.5rem;
   }
 }
 
@@ -358,27 +381,20 @@ button {
   .sc-nav {
     justify-content: flex-start;
   }
-
-  .sc-filmstrip__track {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sc-filmstrip__track img {
-    height: 42vw;
-  }
 }
 
 .sc-section {
-  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 5vw, 4rem);
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+  padding-inline: 0;
 }
 
 .sc-section__inner {
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .sc-section--narrow .sc-section__inner {
   max-width: 720px;
+  margin-inline: auto;
 }
 
 .sc-heading {
@@ -393,6 +409,10 @@ button {
 .sc-heading--h2 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); }
 .sc-heading--h3 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
 
+.sc-align-left { text-align: left; }
+.sc-align-center { text-align: center; }
+.sc-align-right { text-align: right; }
+
 .sc-text {
   margin: 0;
   color: var(--sc-muted);
@@ -401,11 +421,62 @@ button {
 
 .sc-columns {
   display: grid;
+  width: 100%;
   gap: 1.5rem;
+  align-items: start;
 }
 
 .sc-columns--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .sc-columns--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.sc-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sc-column--left {
+  align-items: flex-start;
+}
+
+.sc-column--center {
+  align-items: center;
+}
+
+.sc-column--right {
+  align-items: flex-end;
+}
+
+.sc-column .sc-heading,
+.sc-column .sc-text,
+.sc-column .sc-drag-target {
+  width: 100%;
+  align-self: stretch;
+}
+
+.sc-column .sc-filmstrip {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.sc-btn-row {
+  display: flex;
+}
+
+.sc-column--left .sc-btn-row {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.sc-column--center .sc-btn-row {
+  justify-content: center;
+  width: 100%;
+}
+
+.sc-column--right .sc-btn-row {
+  justify-content: flex-end;
+  width: 100%;
+}
 
 @media (max-width: 800px) {
   .sc-columns--2,
@@ -416,40 +487,40 @@ button {
 
 .sc-image {
   overflow: hidden;
+  max-width: 100%;
+  display: block;
 }
 
-.sc-image img {
+.sc-image--left {
+  margin-inline: 0 auto;
+}
+
+.sc-image--center {
+  margin-inline: auto;
+}
+
+.sc-image--right {
+  margin-inline: auto 0;
+}
+
+.sc-image img,
+.sc-image__placeholder {
   width: 100%;
   height: auto;
+  display: block;
 }
 
-.sc-services {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.sc-service {
-  padding: 0 0 1.25rem;
-  border: 0;
-  background: transparent;
-}
-
-.sc-service__icon {
-  display: none;
-}
-
-.sc-service h3 {
-  font-family: var(--sc-display);
-  font-size: 1.35rem;
-  font-weight: 400;
-  margin: 0 0 0.45rem;
-}
-
-.sc-service p {
-  margin: 0;
-  color: var(--sc-muted);
-  font-size: 0.95rem;
+.sc-image__placeholder {
+  min-height: 8rem;
+  background: #f3f1ee;
+  color: #9a9690;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .sc-spacer {
@@ -519,5 +590,9 @@ button {
 
   .sc-btn:hover {
     transform: none;
+  }
+
+  .sc-filmstrip__track {
+    scroll-behavior: auto;
   }
 }

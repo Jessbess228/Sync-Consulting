@@ -1,13 +1,13 @@
 # Sync Consulting
 
-Standalone marketing site for **Sync Consulting** with a visual page builder (Puck). Layout is one JSON document: edit in Admin, publish to `public/layout.json`, and the public page renders the same component catalog.
+Standalone marketing site for **Sync Consulting** with a visual page builder (Puck). Layout is one JSON document: edit in Admin, save to `public/layout.json`, and the public page renders the same component catalog.
 
 ## Stack
 
 - Vite + React 19 + TypeScript
 - React Router
 - [@puckeditor/core](https://puckeditor.com/) visual editor
-- Koa CMS API (draft vs published JSON)
+- Koa CMS API (reads and writes `public/layout.json`)
 
 ## Develop
 
@@ -19,9 +19,9 @@ npm start
 `npm start` runs the CMS API on port `9000` and Vite on `5174`. App: [http://127.0.0.1:5174/sync-app/](http://127.0.0.1:5174/sync-app/) (`base: /sync-app/` so it can mount under the portfolio origin).
 
 - Public site: `/sync-app/`
-- Layout manager: `/sync-app/#/admin`
+- Layout manager: `/sync-app/#/admin-edit-mode`
 
-Use `npm run dev` alone only if you do not need to save drafts. The public page still loads published `layout.json` without the CMS server.
+Use `npm run dev` alone only if you do not need to save. The public page still loads `layout.json` without the CMS server.
 
 ### Portfolio (Website) embed
 
@@ -33,12 +33,11 @@ In the sibling [Website](../Website) portfolio:
 
 ## Persist layout
 
-The page is stored as Puck `Data` JSON (the document you would later put in a database):
+Copy and layout live in one Puck JSON document, [`public/layout.json`](public/layout.json):
 
-- Draft autosave: `gen/draft.json` via `PUT /cms-api/layout`
-- Publish: copies draft to `public/layout.json` (included in `vite build`)
+- Admin autosave: `PUT /cms-api/layout` writes `public/layout.json` (included in `vite build`)
 - Public site reads `/sync-app/layout.json`
-- Admin toolbar: **Save draft**, **Publish**, **View site**, **Reset**, **Export JSON**, **Import JSON**
+- Admin toolbar: **Save**, **View site**, **Export JSON**, **Import JSON**
 
 If the CMS server is down, Admin still edits in memory; export JSON to keep work.
 

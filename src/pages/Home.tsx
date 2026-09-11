@@ -1,20 +1,19 @@
 import { Render, type Data } from '@puckeditor/core'
 import { useEffect, useState } from 'react'
-import { fetchPublishedLayout, getDefaultLayout } from '../lib/layoutStorage'
+import { emptyLayout, fetchPublicLayout } from '../lib/layoutStorage'
 import { puckConfig } from '../puck/config'
-import { messages } from './Home.messages'
 
 export function Home() {
   const [layoutData, setLayoutData] = useState<Data | null>(null)
 
   useEffect(() => {
-    fetchPublishedLayout()
+    fetchPublicLayout()
       .then(setLayoutData)
-      .catch(() => setLayoutData(getDefaultLayout()))
+      .catch(() => setLayoutData(emptyLayout()))
   }, [])
 
   if (!layoutData) {
-    return <div className="site-shell">{messages.loading}</div>
+    return <div className="site-shell">Loading…</div>
   }
 
   return <Render config={puckConfig} data={layoutData} />

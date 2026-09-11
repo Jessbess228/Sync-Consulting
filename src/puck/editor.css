@@ -1,0 +1,52 @@
+:root {
+  --puck-slot-color-bg: transparent;
+  --puck-slot-color-border: transparent;
+}
+
+.sc-column {
+  height: auto !important;
+}
+
+.sc-drag-target {
+  width: 100%;
+}
+
+[data-puck-component] {
+  max-width: 100%;
+}
+
+[data-puck-component]:has(.sc-columns),
+[data-puck-component]:has(.sc-section),
+[data-puck-component]:has(.sc-filmstrip) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.sc-section__inner [data-puck-dropzone] {
+  width: 100%;
+}
+
+[data-puck-dropzone] {
+  background: transparent !important;
+  outline: none !important;
+}
+
+.puck-number-input {
+  background: var(--puck-field-color-bg, var(--puck-color-surface));
+  border-width: var(--puck-field-border-width, var(--puck-border-width-regular));
+  border-style: solid;
+  border-color: var(--puck-field-color-border, var(--puck-color-border));
+  border-radius: var(--puck-field-radius, var(--puck-radius-m));
+  box-sizing: border-box;
+  color: var(--puck-field-color-text, var(--puck-color-text));
+  font-family: inherit;
+  font-size: var(--puck-font-size-xs);
+  padding: var(--puck-space-3) var(--puck-space-4);
+  width: 100%;
+  max-width: 100%;
+}
+
+.puck-number-input:focus {
+  outline: none;
+  border-color: var(--puck-color-text);
+}

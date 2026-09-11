@@ -7,8 +7,7 @@ import bodyParser from 'koa-bodyparser'
 import Router from '@koa/router'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const DRAFT_PATH = resolve(ROOT, 'gen', 'draft.json')
-const PUBLISHED_PATH = resolve(ROOT, 'public', 'layout.json')
+const LAYOUT_PATH = resolve(ROOT, 'public', 'layout.json')
 const PORT = 9000
 
 function isValidLayout(data) {
@@ -25,13 +24,13 @@ async function writeJson(filePath, data) {
   await writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, 'utf8')
 }
 
-async function loadLayoutFile(filePath) {
-  if (!existsSync(filePath)) {
+async function loadLayout() {
+  if (!existsSync(LAYOUT_PATH)) {
     return null
   }
 
   try {
-    const data = await readJson(filePath)
+    const data = await readJson(LAYOUT_PATH)
     if (!isValidLayout(data)) {
       return null
     }
@@ -44,9 +43,7 @@ async function loadLayoutFile(filePath) {
 const router = new Router()
 
 router.get('/cms-api/layout', async (ctx) => {
-  const status = ctx.query.status === 'published' ? 'published' : 'draft'
-  const filePath = status === 'published' ? PUBLISHED_PATH : DRAFT_PATH
-  const data = await loadLayoutFile(filePath)
+  const data = await loadLayout()
   if (!data) {
     ctx.status = 404
     ctx.body = { error: 'Layout not found' }
@@ -63,19 +60,8 @@ router.put('/cms-api/layout', async (ctx) => {
     return
   }
 
-  await writeJson(DRAFT_PATH, data)
+  await writeJson(LAYOUT_PATH, data)
   ctx.body = data
-})
-
-router.post('/cms-api/publish', async (ctx) => {
-  const draft = await loadLayoutFile(DRAFT_PATH)
-  if (!draft) {
-    ctx.status = 404
-    ctx.body = { error: 'Draft not found' }
-    return
-  }
-  await writeJson(PUBLISHED_PATH, draft)
-  ctx.body = draft
 })
 
 const app = new Koa()
