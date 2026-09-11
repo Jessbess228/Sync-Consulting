@@ -205,38 +205,6 @@
                   }
                 },
                 {
-                  "type": "Filmstrip",
-                  "props": {
-                    "images": [
-                      {
-                        "src": "",
-                        "alt": "Photo 1"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 2"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 3"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 4"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 5"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 6"
-                      }
-                    ],
-                    "id": "Filmstrip-c68e9b50-b54b-49f6-979b-d86dd25d83b9"
-                  }
-                },
-                {
                   "type": "Image",
                   "props": {
                     "id": "Image-approach",
@@ -264,38 +232,6 @@
                 }
               ],
               "left": [
-                {
-                  "type": "Filmstrip",
-                  "props": {
-                    "images": [
-                      {
-                        "src": "",
-                        "alt": "Photo 1"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 2"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 3"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 4"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 5"
-                      },
-                      {
-                        "src": "",
-                        "alt": "Photo 6"
-                      }
-                    ],
-                    "id": "Filmstrip-eadc4994-5959-42d9-94ba-81c58a970426"
-                  }
-                },
                 {
                   "type": "Image",
                   "props": {
@@ -332,15 +268,14 @@
               "id": "Columns-approach",
               "columns": "2",
               "gap": 28,
-              "leftAlign": "left",
-              "leftWidth": 90
+              "leftAlign": "left"
             }
           }
         ],
         "id": "Section-approach",
         "background": "grid",
         "width": "default",
-        "padding": "md",
+        "padding": "sm",
         "anchorId": "approach",
         "paddingLeft": 80,
         "paddingRight": 80
@@ -390,9 +325,9 @@
                 }
               ],
               "left": [],
+              "id": "Columns-d6623717-5ade-4014-82e4-d03831b08ddc",
               "columns": "3",
               "gap": 24,
-              "id": "Columns-d6623717-5ade-4014-82e4-d03831b08ddc",
               "rightAlign": "center",
               "leftAlign": "left",
               "thirdAlign": "left"

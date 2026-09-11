@@ -3,7 +3,7 @@ import { Filmstrip } from './Filmstrip'
 import { fluidPx } from './fluidPx'
 import { SiteLink } from '../lib/SiteLink'
 
-export type SyncComponents = {
+type SyncComponents = {
   Header: {
     line1: string
     line2: string
@@ -324,9 +324,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
         return (
           <section
             id={anchorId || undefined}
-            className={`sc-section${width === 'narrow' ? ' sc-section--narrow' : ''}${
-              background === 'grid' ? ' sc-grid-bg' : ''
-            }`}
+            className={`sc-section${width === 'narrow' ? ' sc-section--narrow' : ''}`}
             style={{
               background: bg,
               paddingBlock: pad,

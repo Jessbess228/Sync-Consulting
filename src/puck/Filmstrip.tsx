@@ -72,6 +72,7 @@ export function Filmstrip({
 
   const goTo = (index: number) => {
     const root = scrollerRef.current
+    if (!root) return
     const page = Math.min(Math.max(index, 0), lastPageIndex(frames.length, root.clientWidth))
     const figure = root?.querySelectorAll('figure')[page]
     if (!root || !(figure instanceof HTMLElement)) return

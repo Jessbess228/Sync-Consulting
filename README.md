@@ -7,7 +7,7 @@ Standalone marketing site for **Sync Consulting** with a visual page builder (Pu
 - Vite + React 19 + TypeScript
 - React Router
 - [@puckeditor/core](https://puckeditor.com/) visual editor
-- Koa CMS API (reads and writes `public/layout.json`)
+- Koa CMS API (writes `public/layout.json`)
 
 ## Develop
 
@@ -19,7 +19,9 @@ npm start
 `npm start` runs the CMS API on port `9000` and Vite on `5174`. App: [http://127.0.0.1:5174/sync-app/](http://127.0.0.1:5174/sync-app/) (`base: /sync-app/` so it can mount under the portfolio origin).
 
 - Public site: `/sync-app/`
-- Layout manager: `/sync-app/#/admin-edit-mode`
+- Layout manager: pencil icon on the public site, then password (`CMS_PASSWORD` in `.env`, default `studio`)
+
+Copy `.env.example` to `.env` to set the password. Restart `npm start` after changing it.
 
 Use `npm run dev` alone only if you do not need to save. The public page still loads `layout.json` without the CMS server.
 
@@ -35,11 +37,11 @@ In the sibling [Website](../Website) portfolio:
 
 Copy and layout live in one Puck JSON document, [`public/layout.json`](public/layout.json):
 
-- Admin autosave: `PUT /cms-api/layout` writes `public/layout.json` (included in `vite build`)
+- Admin **Save** writes `public/layout.json` via `PUT /cms-api/layout` (included in `vite build`)
 - Public site reads `/sync-app/layout.json`
-- Admin toolbar: **Save**, **View site**, **Export JSON**, **Import JSON**
+- Admin toolbar: **Save**, **View site**
 
-If the CMS server is down, Admin still edits in memory; export JSON to keep work.
+If the CMS server is down, Admin still edits in memory until you can save.
 
 ## Production
 
@@ -49,17 +51,7 @@ Build:
 npm run build
 ```
 
-Serve `dist/` under the path `/sync-app/` on the same origin as the portfolio (e.g. Caddy `handle_path /sync-app/*`). That matches the Puppies `/api` proxy pattern: same-origin access from `/sync-consulting`.
-
-## Git remote
-
-Local `main` has an initial commit. Creating a Cursor-hosted remote needs an Origin namespace on the account (`origin repo create` currently errors: *Your account has no Origin namespace yet*). After a namespace is available at [cursor.com/codebase](https://cursor.com/codebase):
-
-```bash
-~/.local/bin/origin repo create <namespace>/sync-consulting
-git remote add origin <clone-url>
-git push -u origin main
-```
+Serve `dist/` under the path `/sync-app/` on the same origin as the portfolio (e.g. Caddy `handle_path /sync-app/*`).
 
 ## Scripts
 

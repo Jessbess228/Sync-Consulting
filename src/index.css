@@ -1,16 +1,9 @@
 :root {
-  --bg: #ffffff;
-  --text: #111111;
-  --muted: #6a6a6a;
-  --panel: #f6f4f1;
-  --shadow: rgba(18, 18, 18, 0.08);
   --sc-ink: #111111;
   --sc-muted: #6a6a6a;
   --sc-deep: #ffffff;
   --sc-panel: #f6f4f1;
   --sc-line: #e6e4e1;
-  --sc-cyan: #111111;
-  --sc-cyan-dim: rgba(17, 17, 17, 0.06);
   --sc-display: 'Newsreader', 'Times New Roman', serif;
   --sc-body: 'Inter', 'Helvetica Neue', sans-serif;
 }
@@ -64,8 +57,91 @@ button {
   color: var(--sc-ink);
 }
 
-.sc-grid-bg {
-  background-color: #ffffff;
+.sc-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: var(--sc-ink);
+}
+
+.sc-gate__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(16rem, calc(100% - 2.5rem));
+}
+
+.sc-gate__mark {
+  margin: 0 0 2.4rem;
+  font-family: var(--sc-display);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.sc-gate__label {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-gate__input {
+  width: 100%;
+  margin: 0.55rem 0 1.4rem;
+  padding: 0.45rem 0 0.5rem;
+  border: 0;
+  border-bottom: 1px solid #111111;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  letter-spacing: 0.18em;
+}
+
+.sc-gate__input:focus {
+  outline: none;
+  border-bottom-width: 2px;
+}
+
+.sc-gate__error {
+  margin: -0.6rem 0 1rem;
+  font-size: 0.8rem;
+  color: #b91c1c;
+}
+
+.sc-gate__submit {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sc-gate__submit:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.sc-gate__back {
+  margin-top: 2rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-gate__back:hover {
+  color: var(--sc-ink);
 }
 
 .puck-header-actions {
@@ -581,6 +657,27 @@ button {
 
 .sc-footer__links a:hover {
   color: #111111;
+}
+
+.sc-edit-toggle {
+  position: fixed;
+  left: 50%;
+  bottom: 0.85rem;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  transform: translateX(-50%);
+  color: var(--sc-muted);
+  opacity: 0.4;
+  border-radius: 999px;
+}
+
+.sc-edit-toggle:hover {
+  color: var(--sc-ink);
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
