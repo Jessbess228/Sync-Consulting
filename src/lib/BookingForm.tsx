@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 
 type Booking = {
@@ -10,14 +10,48 @@ type Booking = {
   call: boolean
 }
 
+const BOOKING_SENT_KEY = 'sc-booking-sent'
+let bookingInFlight: Promise<void> | null = null
+let sentThisSession = false
+
+function hasSentBooking() {
+  if (sentThisSession) return true
+  try {
+    return sessionStorage.getItem(BOOKING_SENT_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markBookingSent() {
+  sentThisSession = true
+  try {
+    sessionStorage.setItem(BOOKING_SENT_KEY, '1')
+  } catch {
+    // Private mode can block sessionStorage; in-memory lock still applies.
+  }
+}
+
 async function submitBooking(booking: Booking) {
-  const response = await fetch('/cms-api/bookings', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(booking),
-  })
-  if (!response.ok) {
-    throw new Error('Could not send booking')
+  if (hasSentBooking()) return
+  if (bookingInFlight) return bookingInFlight
+
+  bookingInFlight = (async () => {
+    const response = await fetch('/cms-api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(booking),
+    })
+    if (!response.ok) {
+      throw new Error('Could not send booking')
+    }
+    markBookingSent()
+  })()
+
+  try {
+    await bookingInFlight
+  } finally {
+    bookingInFlight = null
   }
 }
 
@@ -30,7 +64,9 @@ function BookingDialog({
 }) {
   const headingId = useId()
   const nameRef = useRef<HTMLInputElement>(null)
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>(() =>
+    hasSentBooking() ? 'sent' : 'idle',
+  )
   const [contactError, setContactError] = useState('')
 
   useEffect(() => {
@@ -42,6 +78,12 @@ function BookingDialog({
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
+  useEffect(() => {
+    if (status !== 'sent') return
+    const timer = window.setTimeout(onClose, 2000)
+    return () => window.clearTimeout(timer)
+  }, [status, onClose])
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -51,6 +93,11 @@ function BookingDialog({
     const phone = String(data.get('phone') || '').trim()
     if (!email && !phone) {
       setContactError('Add an email or a phone number')
+      return
+    }
+
+    if (hasSentBooking()) {
+      setStatus('sent')
       return
     }
 
@@ -144,6 +191,7 @@ export function BookingButton({
 }) {
   const [open, setOpen] = useState(false)
   const title = formTitle || 'Book a visit'
+  const close = useCallback(() => setOpen(false), [])
 
   return (
     <>
@@ -156,9 +204,7 @@ export function BookingButton({
       >
         {label}
       </button>
-      {open
-        ? createPortal(<BookingDialog onClose={() => setOpen(false)} formTitle={title} />, document.body)
-        : null}
+      {open ? createPortal(<BookingDialog onClose={close} formTitle={title} />, document.body) : null}
     </>
   )
 }

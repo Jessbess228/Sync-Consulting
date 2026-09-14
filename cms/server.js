@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import Router from '@koa/router'
+import { bookingMailConfigured, sendBookingEmail } from './mail.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LAYOUT_PATH = resolve(ROOT, 'public', 'layout.json')
@@ -124,6 +125,17 @@ router.post('/cms-api/bookings', async (ctx) => {
     return
   }
 
+  const booking = { name, email, phone, message, txt, call }
+
+  try {
+    await sendBookingEmail(booking)
+  } catch (error) {
+    console.error('Booking email failed:', error)
+    ctx.status = 502
+    ctx.body = { error: 'Could not send booking email' }
+    return
+  }
+
   let list = []
   if (existsSync(BOOKINGS_PATH)) {
     try {
@@ -137,12 +149,7 @@ router.post('/cms-api/bookings', async (ctx) => {
   list.push({
     id: crypto.randomUUID(),
     at: new Date().toISOString(),
-    name,
-    email,
-    phone,
-    message,
-    txt,
-    call,
+    ...booking,
   })
 
   await mkdir(dirname(BOOKINGS_PATH), { recursive: true })
@@ -164,6 +171,9 @@ app.use(router.allowedMethods())
 app.listen(PORT, () => {
   if (!CMS_PASSWORD) {
     console.warn('CMS_PASSWORD is not set. Admin login and save are locked.')
+  }
+  if (!bookingMailConfigured()) {
+    console.warn('SMTP_USER / SMTP_PASS are not set. Booking emails will fail until they are.')
   }
   console.log(`CMS API: http://127.0.0.1:${PORT}/cms-api`)
 })

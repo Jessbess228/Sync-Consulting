@@ -94,34 +94,34 @@
           {
             "type": "Heading",
             "props": {
+              "id": "Heading-services",
               "text": "Interior Design",
               "level": "h2",
               "align": "left",
-              "font": "newsreader",
-              "id": "Heading-services"
+              "font": "newsreader"
             }
           },
           {
             "type": "Spacer",
             "props": {
-              "size": 20,
-              "id": "Spacer-1"
+              "id": "Spacer-1",
+              "size": 20
             }
           },
           {
             "type": "Text",
             "props": {
+              "id": "Text-services-intro",
               "text": "Practical systems for growing teams — light enough to adopt, strong enough to stick.",
               "align": "left",
-              "font": "inter",
-              "id": "Text-services-intro"
+              "font": "inter"
             }
           },
           {
             "type": "Spacer",
             "props": {
-              "size": 28,
-              "id": "Spacer-2"
+              "id": "Spacer-2",
+              "size": 28
             }
           },
           {
@@ -131,20 +131,20 @@
                 {
                   "type": "Heading",
                   "props": {
+                    "id": "Heading-svc-3",
                     "text": "Org alignment",
                     "level": "h3",
                     "align": "left",
-                    "font": "newsreader",
-                    "id": "Heading-svc-3"
+                    "font": "newsreader"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
+                    "id": "Text-svc-3",
                     "text": "Translate strategy into ownership maps teams can actually run.",
                     "align": "left",
-                    "font": "inter",
-                    "id": "Text-svc-3"
+                    "font": "inter"
                   }
                 }
               ],
@@ -152,20 +152,20 @@
                 {
                   "type": "Heading",
                   "props": {
+                    "id": "Heading-svc-2",
                     "text": "Delivery systems",
                     "level": "h3",
                     "align": "left",
-                    "font": "newsreader",
-                    "id": "Heading-svc-2"
+                    "font": "newsreader"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
+                    "id": "Text-svc-2",
                     "text": "Tighten the path from idea to shipped work without adding ceremony.",
                     "align": "left",
-                    "font": "inter",
-                    "id": "Text-svc-2"
+                    "font": "inter"
                   }
                 }
               ],
@@ -173,23 +173,24 @@
                 {
                   "type": "Heading",
                   "props": {
+                    "id": "Heading-svc-1",
                     "text": "Operating cadence",
                     "level": "h3",
                     "align": "left",
-                    "font": "newsreader",
-                    "id": "Heading-svc-1"
+                    "font": "newsreader"
                   }
                 },
                 {
                   "type": "Text",
                   "props": {
+                    "id": "Text-svc-1",
                     "text": "Install a weekly rhythm that keeps priorities visible and decisions moving.",
                     "align": "left",
-                    "font": "inter",
-                    "id": "Text-svc-1"
+                    "font": "inter"
                   }
                 }
               ],
+              "id": "Columns-services",
               "columns": "3",
               "gap": 24,
               "paddingTop": 0,
@@ -198,8 +199,7 @@
               "paddingLeft": 0,
               "leftAlign": "left",
               "rightAlign": "left",
-              "thirdAlign": "left",
-              "id": "Columns-services"
+              "thirdAlign": "left"
             }
           }
         ],
@@ -308,7 +308,7 @@
             }
           }
         ],
-        "background": "grid",
+        "background": "deep",
         "width": "default",
         "padding": "sm",
         "paddingLeft": 80,
