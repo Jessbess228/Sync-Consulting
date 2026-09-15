@@ -10,7 +10,7 @@ import { bookingMailConfigured, sendBookingEmail } from './mail.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LAYOUT_PATH = resolve(ROOT, 'public', 'layout.json')
-const PORT = 9000
+const PORT = 5556
 const COOKIE = 'sc_cms'
 
 function loadEnv() {

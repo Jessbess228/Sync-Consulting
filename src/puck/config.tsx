@@ -683,6 +683,30 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
                   </li>
                 ))}
               </ul>
+              <button
+                type="button"
+                className="sc-edit-toggle sc-edit-toggle--footer"
+                aria-label="Edit page"
+                disabled
+                title="Admin access is restricted to the login flow"
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path
+                    d="M11.6 1.9a1.4 1.4 0 0 1 2 2L5.4 12.1 2 13l.9-3.4z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.2 3.3 12.7 5.8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
             </div>
           </footer>
         )
