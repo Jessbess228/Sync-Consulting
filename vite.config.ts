@@ -7,6 +7,7 @@ export default defineConfig({
   base: '/sync-app/',
   server: {
     host: '127.0.0.1',
+    allowedHosts: ['jessicaberry.info'],
     port: 5174,
     strictPort: true,
     proxy: {
