@@ -16,7 +16,16 @@ function applyItemDefaults(item: ComponentData, config: Config): ComponentData {
     }
   }
 
-  return { ...item, props }
+  const itemProps = item.props as Record<string, unknown>
+  const generatedId = typeof itemProps.id === 'string' ? itemProps.id : `${String(item.type)}-item`
+
+  return {
+    ...item,
+    props: {
+      ...props,
+      id: generatedId,
+    } as typeof props & { id: string },
+  }
 }
 
 export function applyComponentDefaults(data: Data, config: Config): Data {
