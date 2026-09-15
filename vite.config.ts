@@ -3,10 +3,10 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
-  // Mount under the portfolio origin at /sync-app/ (dev proxy + prod Caddy).
-  base: '/sync-app/',
+  // Serve the app under /sync on the site origin.
+  base: '/sync/',
   server: {
-    host: '127.0.0.1',
+    host: '0.0.0.0',
     allowedHosts: ['jessicaberry.info'],
     port: 5174,
     strictPort: true,

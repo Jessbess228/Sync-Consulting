@@ -581,8 +581,9 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
       },
       resolveFields: ({ props }, { fields }) => {
         if (props.withForm) return fields
-        const { formTitle: _formTitle, ...rest } = fields
-        return rest
+        const rest = { ...fields } as Record<string, unknown>
+        delete rest.formTitle
+        return rest as typeof fields
       },
       render: ({ label, href, variant, withForm, formTitle, puck }) => (
         <div ref={puck.dragRef} className="sc-btn-row">

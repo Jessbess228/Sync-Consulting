@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AdminMode } from './pages/AdminMode'
 import { Home } from './pages/Home'
 
@@ -32,13 +32,13 @@ function EditToggle() {
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename="/sync">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-edit-mode" element={<AdminMode />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <EditToggle />
-    </HashRouter>
+    </BrowserRouter>
   )
 }
