@@ -6,7 +6,7 @@ export default defineConfig({
   // Serve the app under /sync on the site origin.
   base: '/sync/',
   server: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     allowedHosts: ['jessicaberry.info'],
     port: 5174,
     strictPort: true,
