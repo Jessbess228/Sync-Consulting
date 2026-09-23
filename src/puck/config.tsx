@@ -1,4 +1,5 @@
 import type { Config, Slot } from '@puckeditor/core'
+import { Link } from 'react-router-dom'
 import { Filmstrip } from './Filmstrip'
 import { fluidPx } from './fluidPx'
 import { BookingButton } from '../lib/BookingForm'
@@ -683,12 +684,10 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
+              <Link
+                to="/admin"
                 className="sc-edit-toggle sc-edit-toggle--footer"
                 aria-label="Edit page"
-                disabled
-                title="Admin access is restricted to the login flow"
               >
                 <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
                   <path
@@ -706,7 +705,7 @@ export const puckConfig: Config<SyncComponents, RootProps> = {
                     strokeLinecap="round"
                   />
                 </svg>
-              </button>
+              </Link>
             </div>
           </footer>
         )
