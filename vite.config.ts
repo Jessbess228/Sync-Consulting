@@ -35,7 +35,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/cms-api': {
-        target: 'http://127.0.0.1:9000',
+        target: 'http://127.0.0.1:5556',
         changeOrigin: true,
       },
     },
