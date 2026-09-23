@@ -4,7 +4,7 @@ import { Home } from './pages/Home'
 
 export default function App() {
   return (
-    <BrowserRouter basename="/sync-app">
+    <BrowserRouter basename="/website-builder">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminMode />} />
