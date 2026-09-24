@@ -784,19 +784,19 @@ button {
 }
 
 .sc-edit-toggle {
-  position: fixed;
-  left: 50%;
-  bottom: 0.85rem;
-  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1.65rem;
   height: 1.65rem;
-  transform: translateX(-50%);
   color: var(--sc-muted);
   opacity: 0.4;
   border-radius: 999px;
+}
+
+.sc-edit-toggle--footer {
+  margin-left: auto;
+  align-self: center;
 }
 
 .sc-edit-toggle:hover {
