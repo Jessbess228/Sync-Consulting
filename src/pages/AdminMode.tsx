@@ -17,6 +17,8 @@ const statusLabel: Record<SaveStatus, string> = {
   error: 'Couldn’t save',
 }
 
+const fullWidthViewport = { width: '100%' as const, height: 'auto' as const }
+
 function AdminGate({ onUnlocked }: { onUnlocked: () => void }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -153,6 +155,14 @@ export function AdminMode() {
         config={puckConfig}
         data={data}
         iframe={{ syncHostStyles: true, waitForStyles: true }}
+        viewports={[fullWidthViewport]}
+        ui={{
+          viewports: {
+            current: fullWidthViewport,
+            controlsVisible: false,
+            options: [fullWidthViewport],
+          },
+        }}
         onChange={handleChange}
         overrides={{
           fieldTypes: {
