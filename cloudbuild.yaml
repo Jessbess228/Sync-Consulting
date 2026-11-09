@@ -1,0 +1,12 @@
+# Cloud Run / Cloud Build (build from repo root; Dockerfile must exist on the branch you deploy).
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - $_IMAGE_NAME
+      - -f
+      - Dockerfile
+      - .
+images:
+  - $_IMAGE_NAME
