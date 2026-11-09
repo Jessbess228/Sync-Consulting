@@ -9,7 +9,10 @@ import Router from '@koa/router'
 import { bookingMailConfigured, sendBookingEmail } from './mail.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const LAYOUT_PATH = resolve(ROOT, 'public', 'layout.json')
+/** Dev: public/layout.json. Docker: same file nginx serves (see LAYOUT_PATH in Dockerfile). */
+const LAYOUT_PATH = process.env.LAYOUT_PATH
+  ? resolve(process.env.LAYOUT_PATH)
+  : resolve(ROOT, 'public', 'layout.json')
 const PORT = 5556
 const COOKIE = 'sc_cms'
 
@@ -87,6 +90,33 @@ router.post('/cms-api/login', async (ctx) => {
 
 router.get('/cms-api/session', async (ctx) => {
   ctx.status = isSignedIn(ctx) ? 204 : 401
+})
+
+router.get('/cms-api/layout', async (ctx) => {
+  if (!isSignedIn(ctx)) {
+    ctx.status = 401
+    ctx.body = { error: 'Sign in required' }
+    return
+  }
+
+  if (!existsSync(LAYOUT_PATH)) {
+    ctx.status = 404
+    ctx.body = { error: 'No layout saved yet' }
+    return
+  }
+
+  try {
+    const data = JSON.parse(readFileSync(LAYOUT_PATH, 'utf8'))
+    if (!isValidLayout(data)) {
+      ctx.status = 500
+      ctx.body = { error: 'Invalid layout on disk' }
+      return
+    }
+    ctx.body = data
+  } catch {
+    ctx.status = 500
+    ctx.body = { error: 'Could not read layout' }
+  }
 })
 
 router.put('/cms-api/layout', async (ctx) => {
