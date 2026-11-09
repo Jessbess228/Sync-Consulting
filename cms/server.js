@@ -58,12 +58,18 @@ function isSignedIn(ctx) {
   return actual.length === expected.length && timingSafeEqual(actual, expected)
 }
 
-function cookieOptions() {
+function cookieOptions(ctx) {
+  const proto =
+    ctx?.request?.header['x-forwarded-proto'] ||
+    ctx?.request?.header['x-forwarded-protocol'] ||
+    ''
+  const secure = String(proto).split(',')[0].trim() === 'https'
   return {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
     overwrite: true,
+  ...(secure ? { secure: true } : {}),
   }
 }
 
@@ -74,6 +80,13 @@ function isValidLayout(data) {
 const router = new Router()
 
 router.post('/cms-api/login', async (ctx) => {
+  if (!CMS_PASSWORD) {
+    ctx.status = 503
+    ctx.body = {
+      error: 'CMS_PASSWORD is not configured on the server (set it on the sync Cloud Run service).',
+    }
+    return
+  }
   const password = ctx.request.body?.password
   if (!passwordsMatch(password)) {
     ctx.status = 401
@@ -81,7 +94,7 @@ router.post('/cms-api/login', async (ctx) => {
     return
   }
 
-  ctx.cookies.set(COOKIE, sessionToken(), cookieOptions())
+  ctx.cookies.set(COOKIE, sessionToken(), cookieOptions(ctx))
   ctx.status = 204
 })
 
@@ -159,6 +172,7 @@ router.post('/cms-api/bookings', async (ctx) => {
 })
 
 const app = new Koa()
+app.proxy = true
 app.use(
   bodyParser({
     jsonLimit: '10mb',
