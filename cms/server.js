@@ -9,7 +9,10 @@ import Router from '@koa/router'
 import { bookingMailConfigured, sendBookingEmail } from './mail.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const LAYOUT_PATH = resolve(ROOT, 'public', 'layout.json')
+/** Dev: public/layout.json. Docker: same file nginx serves (see LAYOUT_PATH in Dockerfile). */
+const LAYOUT_PATH = process.env.LAYOUT_PATH
+  ? resolve(process.env.LAYOUT_PATH)
+  : resolve(ROOT, 'public', 'layout.json')
 const PORT = 5556
 const COOKIE = 'sc_cms'
 

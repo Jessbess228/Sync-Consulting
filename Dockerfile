@@ -28,6 +28,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 ENV PORT=8080 \
     NODE_ENV=production \
+    LAYOUT_PATH=/usr/share/nginx/html/website-builder/layout.json \
     PYTHONDONTWRITEBYTECODE=1
 
 EXPOSE 8080
