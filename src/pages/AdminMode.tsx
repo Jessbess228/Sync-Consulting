@@ -152,12 +152,14 @@ export function AdminMode() {
       <Puck
         config={puckConfig}
         data={data}
+        dictionary={{ 'header-publish': 'Save' }}
         iframe={{ syncHostStyles: true, waitForStyles: true }}
         onChange={handleChange}
         overrides={{
           fieldTypes: {
             number: NumberField,
           },
+          header: ({ children }) => <>{children}</>,
         }}
         onPublish={(nextData) => {
           void handleSave(nextData)
