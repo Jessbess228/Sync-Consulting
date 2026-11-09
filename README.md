@@ -51,7 +51,36 @@ Build:
 npm run build
 ```
 
-Serve `dist/` under the path `/website-builder/` on the same origin as the portfolio (e.g. Caddy `handle_path /website-builder/*`).
+### Google Cloud Run (recommended with portfolio on GCP)
+
+This repo includes a `Dockerfile` that serves:
+
+- `/website-builder/` — Vite `dist` (built with `base: /website-builder/`)
+- `/cms-api` — Koa CMS (layout save, login, bookings)
+
+Deploy as its **own** Cloud Run service, then set `SYNC_APP_ORIGIN` on the [Website](../Website) portfolio service to this service’s URL. The portfolio iframe uses `/website-builder/` on the **same origin**; nginx on the portfolio container proxies those paths to `SYNC_APP_ORIGIN`.
+
+Example:
+
+```bash
+export PROJECT_ID=your-gcp-project
+export REGION=australia-southeast1
+
+gcloud builds submit --tag "gcr.io/${PROJECT_ID}/website-builder" .
+gcloud run deploy website-builder \
+  --image "gcr.io/${PROJECT_ID}/website-builder" \
+  --region "${REGION}" \
+  --allow-unauthenticated \
+  --set-env-vars "CMS_PASSWORD=studio,SMTP_USER=...,SMTP_PASS=..."
+```
+
+Set booking mail vars from `.env.example` if you need the contact form to send email.
+
+**Note:** layout saves write to `public/layout.json` inside the container. On Cloud Run that file is lost when the instance is recycled unless you add persistent storage.
+
+### EC2 / Caddy (legacy)
+
+Serve `dist/` under `/website-builder/` on the same origin as the portfolio (e.g. Caddy `handle_path /website-builder/*`), and proxy `/cms-api` to the Koa server on port `5556`.
 
 ## Scripts
 
