@@ -31,7 +31,11 @@ async function requestLayout(url: string, init?: RequestInit): Promise<Data> {
 }
 
 export async function fetchPublicLayout(): Promise<Data> {
-  return requestLayout(`${import.meta.env.BASE_URL}layout.json`)
+  try {
+    return await requestLayout(`${CMS_API}/public-layout`)
+  } catch {
+    return requestLayout(`${import.meta.env.BASE_URL}layout.json`)
+  }
 }
 
 export async function checkCmsSession(): Promise<boolean> {
