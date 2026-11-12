@@ -74,6 +74,22 @@ function isValidLayout(data) {
   return Boolean(data && typeof data === 'object' && Array.isArray(data.content))
 }
 
+function readLayoutFromDisk() {
+  if (!existsSync(LAYOUT_PATH)) {
+    return { status: 404, body: { error: 'No layout saved yet' } }
+  }
+
+  try {
+    const data = JSON.parse(readFileSync(LAYOUT_PATH, 'utf8'))
+    if (!isValidLayout(data)) {
+      return { status: 500, body: { error: 'Invalid layout on disk' } }
+    }
+    return { status: 200, body: data }
+  } catch {
+    return { status: 500, body: { error: 'Could not read layout' } }
+  }
+}
+
 const router = new Router()
 
 router.post('/cms-api/login', async (ctx) => {
@@ -92,6 +108,13 @@ router.get('/cms-api/session', async (ctx) => {
   ctx.status = isSignedIn(ctx) ? 204 : 401
 })
 
+/** Public site reads this (no auth); same file as PUT /cms-api/layout writes. */
+router.get('/cms-api/public-layout', async (ctx) => {
+  const result = readLayoutFromDisk()
+  ctx.status = result.status
+  ctx.body = result.body
+})
+
 router.get('/cms-api/layout', async (ctx) => {
   if (!isSignedIn(ctx)) {
     ctx.status = 401
@@ -99,24 +122,9 @@ router.get('/cms-api/layout', async (ctx) => {
     return
   }
 
-  if (!existsSync(LAYOUT_PATH)) {
-    ctx.status = 404
-    ctx.body = { error: 'No layout saved yet' }
-    return
-  }
-
-  try {
-    const data = JSON.parse(readFileSync(LAYOUT_PATH, 'utf8'))
-    if (!isValidLayout(data)) {
-      ctx.status = 500
-      ctx.body = { error: 'Invalid layout on disk' }
-      return
-    }
-    ctx.body = data
-  } catch {
-    ctx.status = 500
-    ctx.body = { error: 'Could not read layout' }
-  }
+  const result = readLayoutFromDisk()
+  ctx.status = result.status
+  ctx.body = result.body
 })
 
 router.put('/cms-api/layout', async (ctx) => {
