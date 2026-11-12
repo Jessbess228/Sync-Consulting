@@ -43,7 +43,8 @@ export async function checkCmsSession(): Promise<boolean> {
   }
 }
 
-export async function loginCms(password: string): Promise<'ok' | 'unauthorized' | 'offline'> {
+/** `null` = logged in; otherwise show the string in the UI. */
+export async function loginCms(password: string): Promise<string | null> {
   try {
     const response = await fetch(`${CMS_API}/login`, {
       method: 'POST',
@@ -51,11 +52,15 @@ export async function loginCms(password: string): Promise<'ok' | 'unauthorized' 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     })
-    if (response.ok) return 'ok'
-    if (response.status === 401) return 'unauthorized'
-    return 'offline'
+    if (response.ok) return null
+    if (response.status === 401) return 'Wrong password'
+
+    const snippet = (await response.text()).trim().slice(0, 160)
+    return snippet
+      ? `Login failed (${response.status}): ${snippet}`
+      : `Login failed (${response.status})`
   } catch {
-    return 'offline'
+    return 'Couldn’t reach the CMS. For local dev, run npm start.'
   }
 }
 
