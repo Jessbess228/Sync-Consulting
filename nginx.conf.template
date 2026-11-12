@@ -21,8 +21,7 @@ server {
     }
 
     location = /website-builder/layout.json {
-        root /usr/share/nginx/html;
-        try_files $uri =404;
+        alias ${LAYOUT_PATH};
         add_header Cache-Control "no-store" always;
     }
 
