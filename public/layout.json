@@ -44,7 +44,7 @@
         "height": 100,
         "headlineFont": "hamburg",
         "headlineBold": false,
-        "subcopy": "",
+        "subcopy": "Interior design with Sync Consulting — thoughtful rooms, shaped around how you live.",
         "imageUrl": "",
         "id": "Hero-1",
         "brand": "",
@@ -112,7 +112,7 @@
             "type": "Text",
             "props": {
               "id": "Text-services-intro",
-              "text": "Practical systems for growing teams — light enough to adopt, strong enough to stick.",
+              "text": "Sonja brings a calm, practical eye to residential interiors — layout, palette, and finishing details that feel collected.",
               "align": "left",
               "font": "inter"
             }
@@ -132,7 +132,7 @@
                   "type": "Heading",
                   "props": {
                     "id": "Heading-svc-3",
-                    "text": "Org alignment",
+                    "text": "Space planning",
                     "level": "h3",
                     "align": "left",
                     "font": "newsreader"
@@ -142,7 +142,7 @@
                   "type": "Text",
                   "props": {
                     "id": "Text-svc-3",
-                    "text": "Translate strategy into ownership maps teams can actually run.",
+                    "text": "Furniture layouts, circulation, and storage that suit your floor plan and daily routines.",
                     "align": "left",
                     "font": "inter"
                   }
@@ -153,7 +153,7 @@
                   "type": "Heading",
                   "props": {
                     "id": "Heading-svc-2",
-                    "text": "Delivery systems",
+                    "text": "Colour & materials",
                     "level": "h3",
                     "align": "left",
                     "font": "newsreader"
@@ -163,7 +163,7 @@
                   "type": "Text",
                   "props": {
                     "id": "Text-svc-2",
-                    "text": "Tighten the path from idea to shipped work without adding ceremony.",
+                    "text": "Paint, timber, stone, and textiles chosen for light, wear, and the mood you want at home.",
                     "align": "left",
                     "font": "inter"
                   }
@@ -174,7 +174,7 @@
                   "type": "Heading",
                   "props": {
                     "id": "Heading-svc-1",
-                    "text": "Operating cadence",
+                    "text": "Styling & install",
                     "level": "h3",
                     "align": "left",
                     "font": "newsreader"
@@ -184,7 +184,7 @@
                   "type": "Text",
                   "props": {
                     "id": "Text-svc-1",
-                    "text": "Install a weekly rhythm that keeps priorities visible and decisions moving.",
+                    "text": "Art, lighting, and soft furnishings — plus coordination with trades so the room comes together on site.",
                     "align": "left",
                     "font": "inter"
                   }
@@ -240,7 +240,7 @@
                 {
                   "type": "Heading",
                   "props": {
-                    "text": "Title",
+                    "text": "Design with clarity",
                     "level": "h2",
                     "align": "center",
                     "font": "newsreader",
@@ -250,7 +250,7 @@
                 {
                   "type": "Text",
                   "props": {
-                    "text": "We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.",
+                    "text": "Mood boards, samples, and a clear schedule of decisions — so you see the room before anything is ordered and nothing lands as a surprise.",
                     "align": "center",
                     "font": "inter",
                     "id": "Text-approach"
@@ -271,7 +271,7 @@
                 {
                   "type": "Heading",
                   "props": {
-                    "text": "Title",
+                    "text": "Listen first",
                     "level": "h2",
                     "align": "center",
                     "font": "newsreader",
@@ -281,7 +281,7 @@
                 {
                   "type": "Text",
                   "props": {
-                    "text": "We embed for a focused sprint, map the friction, and leave you with a cadence your team owns — not a deck that gathers dust.",
+                    "text": "Sonja starts with how you use each room — light, flow, and what needs to change — then builds a direction that fits your home and budget through Sync Consulting.",
                     "align": "center",
                     "font": "inter",
                     "id": "Text-ef53255f-4cfd-487e-a8be-c8b60a72ad77"
@@ -334,7 +334,7 @@
           {
             "type": "Text",
             "props": {
-              "text": "Tell us where the handoffs break. We’ll propose a focused engagement within a week.",
+              "text": "Share your suburb, rooms in mind, and timing. Sonja will reply with next steps for a consultation.",
               "align": "center",
               "font": "inter",
               "id": "Text-contact"

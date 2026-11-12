@@ -27,14 +27,12 @@ function AdminGate({ onUnlocked }: { onUnlocked: () => void }) {
     setSubmitting(true)
     setError('')
     try {
-      const result = await loginCms(password)
-      if (result === 'ok') {
+      const loginError = await loginCms(password)
+      if (!loginError) {
         onUnlocked()
         return
       }
-      setError(result === 'offline' ? 'CMS isn’t running. Start it with npm start.' : 'Wrong password')
-    } catch {
-      setError('Couldn’t reach the CMS')
+      setError(loginError)
     } finally {
       setSubmitting(false)
     }
